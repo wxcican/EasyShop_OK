@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.feicuiedu.com.yitao.MainActivity">
-
+    tools:context="com.feicuiedu.com.yitao.splash.SplashActivity"
+    android:background="@drawable/shouye">
 
 </RelativeLayout>
