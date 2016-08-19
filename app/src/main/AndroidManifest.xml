@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.feicuiedu.com.yitao">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.feicuiedu.com.easyshop">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.feicuiedu.com.easyshop.YiTaoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name="com.feicuiedu.com.easyshop.main.MainActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
-            android:name=".user.login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name="com.feicuiedu.com.easyshop.user.login.LoginActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".splash.SplashActivity"
+            android:name="com.feicuiedu.com.easyshop.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Main">
             <intent-filter>
@@ -25,10 +29,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
-            android:name=".user.register.RegisterActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name="com.feicuiedu.com.easyshop.user.register.RegisterActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

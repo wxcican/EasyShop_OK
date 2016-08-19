@@ -11,9 +11,21 @@
     <string name="username_pwd_rule">用户名或密码</string>
     <string name="username_pwd_error">用户名或密码错误</string>
     <string name="OK">确定</string>
-    
-    <string name="password_rules">密码以字母开头，长度在6~18之间，只能包含字符、数字和下划线</string>
+
+    <string name="password_rules">密码以数字或字母开头，长度在6~18之间，只能包含字符、数字和下划线</string>
     <string name="username_rules">账号为中文，字母或数字，长度为4~20，一个中文算2个长度</string>
     <string name="username_equal_pwd">两次输入的密码不同！</string>
+
+    <string name="main_shop">商城</string>
+    <string name="main_message">消息</string>
+    <string name="main_mail_list">通讯录</string>
+    <string name="main_me">我的</string>
+
+    <string name="goods_name">宝贝</string>
+    <string name="goods_price">价格</string>
+
+    <string name="load_more_error">加载时发生错误-_-!</string>
+    <string name="load_more_end">没有更多数据</string>
+    <string name="refresh_more_end">没有新的商品了！</string>
 
 </resources>

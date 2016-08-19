@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    tools:context=".user.login.LoginActivity">
+    tools:context="com.feicuiedu.com.easyshop.user.login.LoginActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -67,7 +66,7 @@
         android:layout_marginRight="@dimen/dp_50"
         android:text="@string/register"
         android:textColor="@color/text_color_white"
-        android:textSize="@dimen/dp_20" />
+        android:textSize="@dimen/sp_20" />
 
     <ProgressBar
         android:id="@+id/progress"
