@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tv_title;
     @Bind(R.id.viewpager)
     ViewPager viewPager;
+    private int pageInt=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        textChange(0);
-        viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), 0));
-        viewPager.setCurrentItem(0);
+        textChange(pageInt);
+        viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), pageInt));
+        viewPager.setCurrentItem(pageInt);
         viewPager.addOnPageChangeListener(listener);
     }
 
@@ -76,20 +77,24 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_shop:
-                textChange(0);
-                viewPager.setCurrentItem(0);
+                pageInt=0;
+                textChange(pageInt);
+                viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_message:
+                pageInt=1;
                 textChange(1);
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_mail_list:
-                textChange(2);
-                viewPager.setCurrentItem(2);
+                pageInt=2;
+                textChange(pageInt);
+                viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_me:
-                textChange(3);
-                viewPager.setCurrentItem(3);
+                pageInt=3;
+                textChange(pageInt);
+                viewPager.setCurrentItem(pageInt);
                 break;
         }
     }

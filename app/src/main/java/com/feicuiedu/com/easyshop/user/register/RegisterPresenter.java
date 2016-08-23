@@ -1,19 +1,12 @@
 package com.feicuiedu.com.easyshop.user.register;
 
-import android.content.Context;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.LoginResult;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.feicuiedu.com.easyshop.network.GsonRequest;
-import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
 import java.util.HashMap;

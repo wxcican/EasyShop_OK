@@ -2,6 +2,9 @@ package com.feicuiedu.com.easyshop.model;
 
 import java.io.Serializable;
 
+/**
+ * 商品的详情类
+ */
 @SuppressWarnings("unused")
 public class GoodsInfo implements Serializable {
 

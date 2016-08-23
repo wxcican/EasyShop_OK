@@ -23,7 +23,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         fragmentList.add(ShopFragment.getInstance(genre));
         fragmentList.add(new MessageFragment());
         fragmentList.add(new MailListFragment());
-        fragmentList.add(new MeFragment());
+        fragmentList.add(MeFragment.getInstance(genre));
     }
 
     @Override

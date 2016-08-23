@@ -61,6 +61,31 @@ public class RegexUtils {
     }
 
     /**
+     * 昵称为中文，字母或数字，长度为1~12，一个中文算2个长度
+     *
+     * @param nickname 账号
+     * @return {@link #VERIFY_SUCCESS}, {@link #VERIFY_TYPE_ERROR}, {@link #VERIFY_LENGTH_ERROR}
+     */
+    public static int verifyNickname(String nickname) {
+        Preconditions.checkNonNull(nickname, "verifyUsername: username is null");
+
+        int length = countLength(nickname);
+
+        if (length < 1 || length > 12) {
+            return VERIFY_LENGTH_ERROR;
+        }
+
+        String regex = "^[a-zA-Z0-9\u4E00-\u9FA5]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(nickname);
+
+        if (!matcher.matches()) {
+            return VERIFY_TYPE_ERROR;
+        }
+        return VERIFY_SUCCESS;
+    }
+
+    /**
      * 将字符串中所有的非标准字符（双字节字符）替换成两个标准字符（**）。
      * 然后再获取长度。
      */

@@ -57,7 +57,7 @@
 
     <Button
         android:id="@+id/btn_register"
-        style="@style/AppTheme.Button.YiTao"
+        style="@style/AppTheme.Button.EasyShop"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
         android:layout_alignLeft="@+id/et_pwdAgain"

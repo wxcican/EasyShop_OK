@@ -2,9 +2,6 @@ package com.feicuiedu.com.easyshop.user.login;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-/**
- *
- */
 public interface LoginView extends MvpView {
 
     void showProgress();

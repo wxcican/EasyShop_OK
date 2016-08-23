@@ -40,4 +40,8 @@ public class User implements Serializable {
     public String getNick_Name() {
         return nick_Name;
     }
+
+    public void setNick_Name(String nick_Name) {
+        this.nick_Name = nick_Name;
+    }
 }
