@@ -1,12 +1,10 @@
-package com.feicuiedu.com.easyshop.main.me.perseoninfo;
+package com.feicuiedu.com.easyshop.main.me.personinfo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,12 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
-import com.feicuiedu.com.easyshop.main.me.PicWindow;
+import com.feicuiedu.com.easyshop.components.PicWindow;
+import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.ItemShow;
 import com.feicuiedu.com.easyshop.model.User;
+import com.feicuiedu.com.easyshop.network.EasyShopApi;
+import com.feicuiedu.com.easyshop.network.EasyShopClient;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import org.hybridsquad.android.library.CropHandler;
 import org.hybridsquad.android.library.CropHelper;
@@ -33,7 +36,7 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PersonInfoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class PersonInfoActivity extends MvpActivity<PersonInfoView, PersonInfoPresenter> implements PersonInfoView, AdapterView.OnItemClickListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -54,6 +57,8 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
 
     private ActivityUtils activityUtils;
     private PicWindow picWindow;
+    private ProgressDialogFragment progressDialogFragment;
+    private PersonInfoAdapter adapter;
     private ArrayList<ItemShow> list = new ArrayList<>();
 
     @Override
@@ -61,6 +66,8 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         super.onCreate(savedInstanceState);
         activityUtils = new ActivityUtils(this);
         setContentView(R.layout.activity_person_info);
+        /*获取头像*/
+        updateAvatar(CurrentUser.getUser().getHead_Image());
     }
 
     @Override
@@ -68,11 +75,27 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         super.onContentChanged();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions,ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        init();
-        PersonInfoAdapter adapter = new PersonInfoAdapter(list);
+
+        adapter = new PersonInfoAdapter(list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+    }
+
+    @NonNull
+    @Override
+    public PersonInfoPresenter createPresenter() {
+        return new PersonInfoPresenter();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*从修改昵称页面返回后刷新数据*/
+        list.clear();
+        init();
+        adapter.notifyDataSetChanged();
     }
 
     /*从CurrentUser获取用户数据*/
@@ -95,6 +118,7 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         finish();
     }
 
+    /*用户信息的单行点击事件*/
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
@@ -110,6 +134,7 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    /*头像的点击事件,对头像弹窗的控制*/
     @OnClick(R.id.iv_user_head)
     public void onClick() {
         if (picWindow == null) {
@@ -122,22 +147,6 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         picWindow.show();
     }
 
-    private PicWindow.Listener listener = new PicWindow.Listener() {
-        @Override
-        public void toGallery() {
-            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
-            Intent intent = CropHelper.buildCropFromGalleryIntent(cropHandler.getCropParams());
-            startActivityForResult(intent, CropHelper.REQUEST_CROP);
-        }
-
-        @Override
-        public void toCamera() {
-            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
-            Intent intent = CropHelper.buildCaptureIntent(cropHandler.getCropParams().uri);
-            startActivityForResult(intent, CropHelper.REQUEST_CAMERA);
-        }
-    };
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,26 +154,22 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
         CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
     }
 
+    /*图片裁剪*/
     private CropHandler cropHandler = new CropHandler() {
         @Override
         public void onPhotoCropped(Uri uri) {
             File file = new File(uri.getPath());
-
-            Bitmap bitmap= BitmapFactory.decodeFile(uri.getPath());
-            if(bitmap!=null){
-                iv_user_head.setImageBitmap(bitmap);
-            }
-            /*上传图片*/
+            presenter.uploadAvatar(file);
         }
 
         @Override
         public void onCropCancel() {
-
+            activityUtils.showToast("onCropCancel");
         }
 
         @Override
         public void onCropFailed(String message) {
-
+            activityUtils.showToast("onCropCancel");
         }
 
         @Override
@@ -180,4 +185,50 @@ public class PersonInfoActivity extends AppCompatActivity implements AdapterView
             return PersonInfoActivity.this;
         }
     };
+
+    /*头像弹窗内的监听事件*/
+    private PicWindow.Listener listener = new PicWindow.Listener() {
+        @Override
+        public void toGallery() {
+            /*从相册选择*/
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+            Intent intent = CropHelper.buildCropFromGalleryIntent(cropHandler.getCropParams());
+            startActivityForResult(intent, CropHelper.REQUEST_CROP);
+        }
+
+        @Override
+        public void toCamera() {
+            /*从相机选择*/
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+            Intent intent = CropHelper.buildCaptureIntent(cropHandler.getCropParams().uri);
+            startActivityForResult(intent, CropHelper.REQUEST_CAMERA);
+        }
+    };
+
+    @Override
+    public void updateAvatar(String url) {
+        ImageLoader imageLoader = EasyShopClient.getInstance().getImageLoader();
+        ImageLoader.ImageListener listener = imageLoader.getImageListener(
+                iv_user_head, R.drawable.user_ico, R.drawable.user_ico);
+        imageLoader.get(EasyShopApi.IMAGE_URL + url, listener);
+    }
+
+    @Override
+    public void showProgress() {
+        if (progressDialogFragment == null) {
+            progressDialogFragment = new ProgressDialogFragment();
+        }
+        if (progressDialogFragment.isVisible()) return;
+        progressDialogFragment.show(getSupportFragmentManager(), "fragment_progress_dialog");
+    }
+
+    @Override
+    public void hideProgress() {
+        progressDialogFragment.dismiss();
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        activityUtils.showToast(msg);
+    }
 }

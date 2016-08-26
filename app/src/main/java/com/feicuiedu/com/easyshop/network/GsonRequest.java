@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -98,6 +99,15 @@ public class GsonRequest extends StringRequest {
             GsonRequest request = new GsonRequest(method, url, listener, errorListener) {
                 protected Map<String, String> getParams() throws AuthFailureError {
                     return params;
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Charset", "UTF-8");
+                    //headers.put("Content-Type", "application/x-javascript");
+                    //headers.put("Accept-Encoding", "gzip,deflate");
+                    return headers;
                 }
             };
 

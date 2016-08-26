@@ -24,6 +24,10 @@ android {
         disable 'GradleDependency'
         return true
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -46,4 +50,6 @@ dependencies {
     compile 'com.pkmmte.view:circularimageview:1.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    /*使用工具类导入的包*/
+    compile 'org.apache.commons:commons-lang3:3.4'
 }

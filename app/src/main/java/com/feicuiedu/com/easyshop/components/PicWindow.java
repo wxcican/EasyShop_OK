@@ -1,4 +1,4 @@
-package com.feicuiedu.com.easyshop.main.me;
+package com.feicuiedu.com.easyshop.components;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;

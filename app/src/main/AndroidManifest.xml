@@ -4,8 +4,8 @@
     package="com.feicuiedu.com.easyshop">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".YiTaoApplication"
@@ -35,11 +35,17 @@
             android:name=".user.register.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.me.perseoninfo.PersonInfoActivity"
+            android:name=".main.me.personinfo.PersonInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.me.perseoninfo.NickNameActivity"
+            android:name=".main.me.personinfo.NickNameActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".main.me.persongoods.PersonGoodsActivity" />
+        <!-- windowSoftInputMode属性是为了让输入键盘不遮挡EditText -->
+        <activity
+            android:name=".main.me.goodsload.GoodsLoadActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity android:name=".main.me.goodsload.ShowPhoneActivity"></activity>
     </application>
 
 </manifest>

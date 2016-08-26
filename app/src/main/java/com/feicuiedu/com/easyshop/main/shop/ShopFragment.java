@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
-import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.model.GoodsInfo;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
@@ -74,7 +73,7 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityUtils = new ActivityUtils(this);
-        goodsAdapter = new GoodsAdapter(getContext());
+        goodsAdapter = new GoodsAdapter();
     }
 
     @Nullable

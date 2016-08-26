@@ -51,7 +51,7 @@ public class ShopPresenter extends MvpNullObjectBasePresenter<ShopView> {
                             }
                             break;
                         default:
-                            getView().showRefreshError("未知错误");
+                            getView().showRefreshError(goodsResult.getMessage());
                     }
                 }
             },
@@ -65,6 +65,15 @@ public class ShopPresenter extends MvpNullObjectBasePresenter<ShopView> {
         @Override
         protected Map<String, String> getParams() throws AuthFailureError {
             return postMap;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Charset", "UTF-8");
+            //headers.put("Content-Type", "application/x-javascript");
+            //headers.put("Accept-Encoding", "gzip,deflate");
+            return headers;
         }
     };
 

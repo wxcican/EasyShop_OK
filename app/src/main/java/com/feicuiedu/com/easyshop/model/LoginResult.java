@@ -2,6 +2,9 @@ package com.feicuiedu.com.easyshop.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 登录和注册返回对应的实体类
+ */
 @SuppressWarnings("unused")
 public class LoginResult {
 

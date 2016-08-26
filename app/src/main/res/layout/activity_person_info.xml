@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.me.perseoninfo.PersonInfoActivity">
+    tools:context=".main.me.personinfo.PersonInfoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -28,7 +28,6 @@
             android:id="@+id/iv_user_head"
             android:layout_width="@dimen/dp_140"
             android:layout_height="@dimen/dp_140"
-            android:layout_centerInParent="true"
             android:scaleType="centerInside"
             android:src="@drawable/user_ico"
             app:border="true"

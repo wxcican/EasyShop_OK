@@ -1,4 +1,4 @@
-package com.feicuiedu.com.easyshop.main.me.perseoninfo;
+package com.feicuiedu.com.easyshop.main.me.personinfo;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,7 @@ public class PersonInfoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_person_info, parent, false);
             viewHolder = new ViewHolder(convertView);

@@ -1,6 +1,5 @@
 package com.feicuiedu.com.easyshop.user.register;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -9,7 +8,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,7 +16,7 @@ import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.main.MainActivity;
-import com.feicuiedu.com.easyshop.user.AlertDialogFragment;
+import com.feicuiedu.com.easyshop.components.AlertDialogFragment;
 import com.feicuiedu.com.easyshop.user.EventFinish;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 

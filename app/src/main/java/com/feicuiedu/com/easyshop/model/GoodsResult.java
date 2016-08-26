@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * 获取商品返回对应的实体类
+ */
+@SuppressWarnings("unused")
 public class GoodsResult {
 
     private int code;

@@ -2,6 +2,7 @@ package com.feicuiedu.com.easyshop.user.register;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.LoginResult;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
@@ -18,10 +19,9 @@ import java.util.Map;
 public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> {
 
     private final GsonRequest.Builder<LoginResult> builder;
-    private final GsonRequest.Callback<LoginResult> callback;
 
     public RegisterPresenter() {
-        callback = new GsonRequest.Callback<LoginResult>() {
+        GsonRequest.Callback<LoginResult> callback = new GsonRequest.Callback<LoginResult>() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 getView().hideProgress();
@@ -34,6 +34,8 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
                 getView().hideProgress();
                 if (loginResult.getCode() == 1) {
                     /*还需要登录环信*/
+                    CurrentUser.setUserId(loginResult.getData().getName());
+                    LogUtils.i("===="+loginResult.getData().getName()+loginResult.getData().getHx_Id());
                     CurrentUser.setUser(loginResult.getData());
                     getView().showMessage("注册成功！");
                     getView().navigateToMain();

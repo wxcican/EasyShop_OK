@@ -9,7 +9,6 @@
     <string name="login">登录</string>
     <string name="register">注册</string>
     <string name="username_pwd_rule">用户名或密码</string>
-    <string name="username_pwd_error">用户名或密码错误</string>
     <string name="OK">确定</string>
 
     <string name="password_rules">密码以数字或字母开头，长度在6~18之间，只能包含字符、数字和下划线</string>
@@ -25,11 +24,20 @@
     <string name="main_mail_list">通讯录</string>
     <string name="main_me">我的</string>
 
-    <string name="goods_name">宝贝</string>
+    <string name="goods_name">名称</string>
     <string name="goods_price">价格</string>
+    <string name="goods_type">类别</string>
+    <string name="goods_name_hint">商品的名称</string>
+    <string name="goods_price_hint">价格(￥)</string>
+    <string name="goods_type_check">类型选择</string>
+    <string name="goods_describe">请输入商品的描述,140字以内……</string>
+    <string name="goods_delete">删除</string>
+    <string name="goods_upload">上传</string>
+    <string name="goods_phone">图片详情</string>
 
     <string name="load_more_error">加载时发生错误-_-!</string>
     <string name="load_more_end">没有更多数据</string>
+    <string name="load_more_empty">你没有上传过该类商品</string>
     <string name="refresh_more_end">没有新的商品了！</string>
 
     <string name="me_person_info">个人信息</string>
@@ -41,5 +49,14 @@
     <string name="popu_album">相册</string>
     <string name="popu_camear">相机</string>
     <string name="popu_cancle">取消</string>
+
+    <string name="menu_household">家用</string>
+    <string name="menu_electron">电子</string>
+    <string name="menu_dress">服饰</string>
+    <string name="menu_toy">玩具</string>
+    <string name="menu_book">图书</string>
+    <string name="menu_gift">礼品</string>
+    <string name="menu_other">其它</string>
+
 
 </resources>

@@ -1,6 +1,5 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +25,6 @@ import butterknife.ButterKnife;
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
     private final List<GoodsInfo> list = new ArrayList<>();
-    private Context context;
-
-    public GoodsAdapter(Context context) {
-        this.context = context;
-    }
 
     @Override
     public GoodsView onCreateViewHolder(ViewGroup parent, int viewType) {

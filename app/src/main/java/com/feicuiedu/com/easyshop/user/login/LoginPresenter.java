@@ -19,10 +19,8 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
 
     private final GsonRequest.Builder<LoginResult> builder;
 
-    private final GsonRequest.Callback<LoginResult> callback;
-
     public LoginPresenter() {
-        callback = new GsonRequest.Callback<LoginResult>() {
+        GsonRequest.Callback<LoginResult> callback = new GsonRequest.Callback<LoginResult>() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 getView().hideProgress();
@@ -39,7 +37,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                     getView().showMessage("登录成功");
                     getView().navigateToMain();
                 } else if (loginResult.getCode() == 2) {
-                    getView().showMessage("用户名或密码错误");
+                    getView().showMessage(loginResult.getMessage());
                     getView().loginFailed();
                 } else {
                     getView().showMessage("未知错误");
@@ -48,7 +46,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
             }
         };
 
-        builder = new GsonRequest.Builder<>()
+        builder = new GsonRequest.Builder<LoginResult>()
                 .setMethod(Request.Method.POST)
                 .setUrl(EasyShopApi.BASE_URL + EasyShopApi.LOGIN)
                 .setCallback(callback)

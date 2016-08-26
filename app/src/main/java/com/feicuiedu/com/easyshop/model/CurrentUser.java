@@ -34,14 +34,4 @@ public class CurrentUser {
     public static String getUserId() {
         return userId;
     }
-
-    // 当前用户数据是否为空
-    public static boolean isEmpty() {
-        return userId == null || user == null;
-    }
-
-    // 当前是否有访问令牌
-    public static boolean hasAccessToken() {
-        return userId != null;
-    }
 }
