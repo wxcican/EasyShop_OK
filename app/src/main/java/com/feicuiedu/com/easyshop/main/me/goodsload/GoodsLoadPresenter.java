@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.me.goodsload;
 
+import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.commons.MyFileUtils;
 import com.feicuiedu.com.easyshop.model.GoodsLoad;
 import com.feicuiedu.com.easyshop.model.ImageItem;

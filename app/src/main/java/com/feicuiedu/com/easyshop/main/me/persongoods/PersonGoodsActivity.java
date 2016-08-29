@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.me.persongoods;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.main.details.GoodsDetailActivity;
 import com.feicuiedu.com.easyshop.main.shop.GoodsAdapter;
 import com.feicuiedu.com.easyshop.main.shop.ShopView;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
@@ -86,6 +88,15 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
                 }
             }, 200);
         }
+        goodsAdapter.setListener(new GoodsAdapter.OnItemClickedListener() {
+            @Override
+            public void onPhotoClicked(GoodsInfo goodsInfo) {
+                Intent intent = new Intent(PersonGoodsActivity.this, GoodsDetailActivity.class);
+                intent.putExtra("uuid", goodsInfo.getUuid());
+                intent.putExtra("state", 1);
+                startActivity(intent);
+            }
+        });
     }
 
     /*RecyclerView和PtrClassicFrameLayout的初始化*/
@@ -167,6 +178,18 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
             return false;
         }
     };
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ptrFrameLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ptrFrameLayout.autoRefresh();
+            }
+        }, 200);
+    }
 
     /*ToolBar设置菜单选项*/
     @Override

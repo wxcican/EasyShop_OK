@@ -39,6 +39,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.volley:volley:1.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
     /*mosby的mvp库*/
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
@@ -48,8 +50,8 @@ dependencies {
     compile 'org.hybridsquad.android.photocropper:library:2.1.0'
     /*圆形头像控件*/
     compile 'com.pkmmte.view:circularimageview:1.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     /*使用工具类导入的包*/
     compile 'org.apache.commons:commons-lang3:3.4'
+    /*viewpager下方的指示器*/
+    compile 'me.relex:circleindicator:1.2.1@aar'
 }

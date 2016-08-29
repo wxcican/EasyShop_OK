@@ -15,13 +15,14 @@ import retrofit2.http.Part;
 public interface EasyShopApi {
 
     String BASE_URL = "http://192.168.1.37:8080/yitao/";
-    //String BASE_URL = "http://192.168.1.14:8080/yitao/";
     String LOGIN = "UserWeb?method=login";
     String REGISTER = "UserWeb?method=register";
-    String ALL_GOODS = "GoodsServlet?method=getAll";
-    String IMAGE_URL = "http://192.168.1.37:8080";
     String UPDATE = "UserWeb?method=update";
+    String IMAGE_URL = "http://192.168.1.37:8080";
+    String ALL_GOODS = "GoodsServlet?method=getAll";
     String ADD = "GoodsServlet?method=add";
+    String DETAIL = "GoodsServlet?method=view";
+    String DELETE = "GoodsServlet?method=delete";
 
     @Multipart
     @POST("UserWeb?method=update")

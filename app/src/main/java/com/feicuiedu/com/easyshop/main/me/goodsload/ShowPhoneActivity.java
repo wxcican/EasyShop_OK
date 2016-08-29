@@ -25,6 +25,7 @@ public class ShowPhoneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_phone);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bitmap bitmap = getIntent().getParcelableExtra("images");

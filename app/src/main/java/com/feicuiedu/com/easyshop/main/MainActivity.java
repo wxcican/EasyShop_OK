@@ -1,6 +1,9 @@
 package com.feicuiedu.com.easyshop.main;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
+import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +33,11 @@ public class MainActivity extends AppCompatActivity {
     TextView tv_title;
     @Bind(R.id.viewpager)
     ViewPager viewPager;
-    private int pageInt=0;
+    private int pageInt = 0;
+
+    /*点击2次退出程序*/
+    private static boolean isExit = false;
+    private ActivityUtils activityUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+        activityUtils = new ActivityUtils(this);
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setTitle("");
@@ -51,48 +60,29 @@ public class MainActivity extends AppCompatActivity {
         textChange(pageInt);
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), pageInt));
         viewPager.setCurrentItem(pageInt);
-        viewPager.addOnPageChangeListener(listener);
     }
-
-    /*ViewPager的滑动事件*/
-    private final ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            textChange(position);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
 
     @SuppressWarnings("unused")
     @OnClick({R.id.tv_shop, R.id.tv_message, R.id.tv_mail_list, R.id.tv_me})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_shop:
-                pageInt=0;
+                pageInt = 0;
                 textChange(pageInt);
                 viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_message:
-                pageInt=1;
+                pageInt = 1;
                 textChange(1);
                 viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_mail_list:
-                pageInt=2;
+                pageInt = 2;
                 textChange(pageInt);
                 viewPager.setCurrentItem(pageInt);
                 break;
             case R.id.tv_me:
-                pageInt=3;
+                pageInt = 3;
                 textChange(pageInt);
                 viewPager.setCurrentItem(pageInt);
                 break;
@@ -114,9 +104,27 @@ public class MainActivity extends AppCompatActivity {
         }
         textViews[showId].setSelected(true);
         viewPager.setCurrentItem(showId);
-        textViews[showId].setTextColor(getResources().getColor(R.color.colorAccent));
+        textViews[showId].setTextColor(getResources().getColor(R.color.colorPrimary));
         tv_title.setText(textViews[showId].getText());
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!isExit) {
+            isExit = true;
+            activityUtils.showToast("再按一次退出程序");
+            handler.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            finish();
+        }
+    }
 
+    @SuppressLint("HandlerLeak")
+    private static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
 }

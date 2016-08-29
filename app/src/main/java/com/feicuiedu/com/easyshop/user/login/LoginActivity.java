@@ -8,12 +8,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.components.AlertDialogFragment;
+import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
 import com.feicuiedu.com.easyshop.main.MainActivity;
 import com.feicuiedu.com.easyshop.user.EventFinish;
 import com.feicuiedu.com.easyshop.user.register.RegisterActivity;
@@ -32,13 +32,12 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     EditText et_userName;
     @Bind(R.id.et_pwd)
     EditText et_pwd;
-    @Bind(R.id.progress)
-    ProgressBar progressBar;
     @Bind(R.id.btn_login)
     Button btn_login;
 
 
     private ActivityUtils activityUtils;
+    private ProgressDialogFragment dialogFragment;
     private String username;
     private String password;
 
@@ -79,7 +78,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     }
 
     @SuppressWarnings("unused")
-    @OnClick({R.id.btn_login, R.id.btn_register})
+    @OnClick({R.id.btn_login, R.id.tv_register})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -95,7 +94,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
                 }
                 presenter.login(username, password);
                 break;
-            case R.id.btn_register:
+            case R.id.tv_register:
                 activityUtils.startActivity(RegisterActivity.class);
                 break;
         }
@@ -111,12 +110,14 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     public void showProgress() {
         /*强制关闭软键盘*/
         activityUtils.hideSoftKeyboard();
-        progressBar.setVisibility(View.VISIBLE);
+        if (dialogFragment == null) dialogFragment = new ProgressDialogFragment();
+        if (dialogFragment.isVisible()) return;
+        dialogFragment.show(getSupportFragmentManager(), "progress_dialog_fragment");
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.INVISIBLE);
+        dialogFragment.dismiss();
     }
 
     @Override

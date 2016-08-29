@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.main.details.GoodsDetailActivity;
 import com.feicuiedu.com.easyshop.model.GoodsInfo;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
@@ -131,13 +133,22 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
                 onLoaNextPage();
-                presenter.loadData(getContext(), shopMap);
+                presenter.loadData(shopMap);
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 initData();
-                presenter.refreshData(getContext(), shopMap);
+                presenter.refreshData(shopMap);
+            }
+        });
+        /*商城页,商品的单击事件*/
+        goodsAdapter.setListener(new GoodsAdapter.OnItemClickedListener() {
+            @Override
+            public void onPhotoClicked(GoodsInfo goodsInfo) {
+                Intent intent = new Intent(getContext(), GoodsDetailActivity.class);
+                intent.putExtra("uuid", goodsInfo.getUuid());
+                startActivity(intent);
             }
         });
     }
@@ -145,8 +156,8 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     /*刚进入页面时请求数据的初始化*/
     private void initData() {
         shopMap = new HashMap<>();
-        pageInt=1;
-        shopMap.put("pageNo", pageInt+"");
+        pageInt = 1;
+        shopMap.put("pageNo", pageInt + "");
         shopMap.put("type", pageType);
     }
 
@@ -155,6 +166,17 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
         pageInt++;
         shopMap.put("pageNo", pageInt + "");
         shopMap.put("type", pageType);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ptrLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ptrLayout.autoRefresh();
+            }
+        }, 200);
     }
 
     @Override
@@ -180,7 +202,7 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     @Override
     public void showRefreshError(String msg) {
         ptrLayout.refreshComplete();
-        if(goodsAdapter.getItemCount()>0){
+        if (goodsAdapter.getItemCount() > 0) {
             activityUtils.showToast(msg);
             return;
         }
@@ -206,7 +228,7 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     @Override
     public void showLoadMoreError(String msg) {
         ptrLayout.refreshComplete();
-        if(goodsAdapter.getItemCount()>0){
+        if (goodsAdapter.getItemCount() > 0) {
             activityUtils.showToast(msg);
             return;
         }

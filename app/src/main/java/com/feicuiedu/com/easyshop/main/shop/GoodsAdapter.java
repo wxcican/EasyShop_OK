@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,11 @@ import butterknife.ButterKnife;
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
     private final List<GoodsInfo> list = new ArrayList<>();
+    private OnItemClickedListener listener;
+
+    public void setListener(OnItemClickedListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public GoodsView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,17 +38,25 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
         return new GoodsView(view);
     }
 
+    @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(GoodsView holder, int position) {
+    public void onBindViewHolder(GoodsView holder, final int position) {
 
         holder.tv_name.setText(list.get(position).getName());
         holder.tv_price.setText(list.get(position).getPrice());
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null)
+                    listener.onPhotoClicked(list.get(position));
+            }
+        });
         ImageLoader imageLoader = EasyShopClient.getInstance().
                 getImageLoader();
         ImageLoader.ImageListener imageListener = imageLoader.getImageListener(
                 holder.imageView,
                 R.drawable.image_loding,
-                R.drawable.error);
+                R.drawable.image_error);
         imageLoader.get(EasyShopApi.IMAGE_URL + list.get(position).getPage(), imageListener);
     }
 
@@ -56,7 +70,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
         notifyDataSetChanged();
     }
 
-    public void clear(){
+    public void clear() {
         list.clear();
         notifyDataSetChanged();
     }
@@ -73,5 +87,10 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnItemClickedListener {
+        /*单击照片的监听事件*/
+        void onPhotoClicked(GoodsInfo goodsInfo);
     }
 }

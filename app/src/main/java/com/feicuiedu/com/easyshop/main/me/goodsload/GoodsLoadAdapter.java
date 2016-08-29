@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.me.goodsload;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -88,6 +89,7 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return ITEM_TYPE.ITEM_NORMAl.ordinal();
     }
 
+    @SuppressLint("RecyclerView")
     @SuppressWarnings("deprecation")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {

@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">易淘</string>
 
-    <string name="title_login">易淘登录</string>
-    <string name="title_register">易淘注册</string>
+    <string name="title_login">登录</string>
+    <string name="title_register">注册</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="pwd_again">确认密码</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
+    <string name="fast_register">快速注册</string>
     <string name="username_pwd_rule">用户名或密码</string>
     <string name="OK">确定</string>
 
@@ -24,16 +25,20 @@
     <string name="main_mail_list">通讯录</string>
     <string name="main_me">我的</string>
 
-    <string name="goods_name">名称</string>
-    <string name="goods_price">价格</string>
-    <string name="goods_type">类别</string>
+    <string name="goods_name">名称:</string>
+    <string name="goods_price">价格:</string>
+    <string name="goods_type">类别:</string>
     <string name="goods_name_hint">商品的名称</string>
     <string name="goods_price_hint">价格(￥)</string>
     <string name="goods_type_check">类型选择</string>
-    <string name="goods_describe">请输入商品的描述,140字以内……</string>
+    <string name="goods_describe">请输入商品的描述,200字以内……</string>
     <string name="goods_delete">删除</string>
     <string name="goods_upload">上传</string>
     <string name="goods_phone">图片详情</string>
+    <string name="goods_details">商品详情</string>
+
+    <string name="goods_detail_message">发消息</string>
+    <string name="goods_detail_call">联系他</string>
 
     <string name="load_more_error">加载时发生错误-_-!</string>
     <string name="load_more_end">没有更多数据</string>

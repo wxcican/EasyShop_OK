@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.feicuiedu.com.easyshop">
 
+    <!--打电话权限-->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!--网络权限-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--SD卡读写权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -45,7 +49,9 @@
         <activity
             android:name=".main.me.goodsload.GoodsLoadActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".main.me.goodsload.ShowPhoneActivity"></activity>
+        <activity android:name=".main.me.goodsload.ShowPhoneActivity" />
+        <activity android:name=".main.details.GoodsDetailActivity" />
+        <activity android:name=".main.details.GoodsDetailInfoActivity" />
     </application>
 
 </manifest>

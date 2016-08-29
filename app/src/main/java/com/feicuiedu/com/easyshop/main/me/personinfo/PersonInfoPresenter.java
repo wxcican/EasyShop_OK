@@ -38,7 +38,7 @@ public class PersonInfoPresenter extends MvpNullObjectBasePresenter<PersonInfoVi
                 }
                 LoginResult loginResult = new Gson().fromJson(str_body, LoginResult.class);
                 if (loginResult == null) {
-                    getView().showMessage("未知错");
+                    getView().showMessage("未知错误");
                     return;
                 } else if (loginResult.getCode() != 1) {
                     getView().showMessage(loginResult.getMessage());

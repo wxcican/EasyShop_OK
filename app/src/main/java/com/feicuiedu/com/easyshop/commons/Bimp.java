@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class Bimp {
 	public static int max = 0;
 	
-	public static ArrayList<ImageItem> tempSelectBitmap = new ArrayList<ImageItem>();   //选择的图片的临时列表
+	public static ArrayList<ImageItem> tempSelectBitmap = new ArrayList<>();   //选择的图片的临时列表
 
-	public static Bitmap revitionImageSize(String path) throws IOException {
+	public static Bitmap revisionImageSize(String path) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -24,7 +24,7 @@ public class Bimp {
 		BitmapFactory.decodeStream(in, null, options);
 		in.close();
 		int i = 0;
-		Bitmap bitmap = null;
+		Bitmap bitmap;
 		while (true) {
 			if ((options.outWidth >> i <= 1000)
 					&& (options.outHeight >> i <= 1000)) {

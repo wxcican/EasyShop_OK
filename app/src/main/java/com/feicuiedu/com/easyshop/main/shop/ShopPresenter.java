@@ -1,7 +1,5 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
-import android.content.Context;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,13 +19,13 @@ public class ShopPresenter extends MvpNullObjectBasePresenter<ShopView> {
 
     private HashMap<String, String> postMap;
 
-    public void refreshData(Context context, HashMap<String, String> postMap) {
+    public void refreshData(HashMap<String, String> postMap) {
         this.postMap = postMap;
         getView().showRefresh();
         EasyShopClient.getInstance().addToRequestQueue(refreshRequest);
     }
 
-    public void loadData(Context context, HashMap<String, String> postMap) {
+    public void loadData(HashMap<String, String> postMap) {
         this.postMap = postMap;
         getView().showLoadMoreLoading();
         EasyShopClient.getInstance().addToRequestQueue(loadRequest);

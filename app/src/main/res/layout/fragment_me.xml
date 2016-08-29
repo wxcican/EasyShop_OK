@@ -11,7 +11,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_200"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:gravity="center">
 
         <com.pkmmte.view.CircularImageView
@@ -46,9 +46,10 @@
             android:background="@color/white"
             android:drawableRight="@drawable/selector_item_go"
             android:gravity="center|start"
-            android:paddingLeft="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_10"
             android:text="@string/me_person_info"
+            android:textColor="@color/text_goods_name"
             android:textSize="@dimen/sp_18" />
 
         <Space
@@ -62,9 +63,10 @@
             android:background="@color/white"
             android:drawableRight="@drawable/selector_item_go"
             android:gravity="center|start"
-            android:paddingLeft="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_10"
             android:text="@string/me_person_goods"
+            android:textColor="@color/text_goods_name"
             android:textSize="@dimen/sp_18" />
 
         <Space
@@ -78,9 +80,10 @@
             android:background="@color/white"
             android:drawableRight="@drawable/selector_item_go"
             android:gravity="center|start"
-            android:paddingLeft="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_10"
             android:text="@string/me_goods_upload"
+            android:textColor="@color/text_goods_name"
             android:textSize="@dimen/sp_18" />
 
     </LinearLayout>

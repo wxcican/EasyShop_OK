@@ -105,8 +105,6 @@ public class GsonRequest extends StringRequest {
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
                     headers.put("Charset", "UTF-8");
-                    //headers.put("Content-Type", "application/x-javascript");
-                    //headers.put("Accept-Encoding", "gzip,deflate");
                     return headers;
                 }
             };

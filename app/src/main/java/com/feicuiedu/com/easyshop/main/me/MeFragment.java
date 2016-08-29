@@ -67,11 +67,6 @@ public class MeFragment extends Fragment {
         imageLoader.get(EasyShopApi.IMAGE_URL + CurrentUser.getUser().getHead_Image(), imageListener);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     @OnClick({R.id.iv_user_head, R.id.tv_person_info, R.id.tv_person_goods, R.id.tv_goods_upload})
     public void onClick(View view) {
         switch (view.getId()) {

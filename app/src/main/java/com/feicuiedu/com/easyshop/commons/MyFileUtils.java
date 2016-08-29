@@ -4,11 +4,11 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class MyFileUtils {
 	
 	public static String SD_PATH = Environment.getExternalStorageDirectory()
@@ -17,7 +17,7 @@ public class MyFileUtils {
 	public static void saveBitmap(Bitmap bm, String picName) {
 		try {
 			if (!isFileExist("")) {
-				File tempf = createSDDir("");
+				createSDDir("");
 			}
 			File f = new File(SD_PATH, picName + ".JPEG");
 			if (f.exists()) {
@@ -27,8 +27,6 @@ public class MyFileUtils {
 			bm.compress(Bitmap.CompressFormat.JPEG, 90, out);
 			out.flush();
 			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -63,7 +61,7 @@ public class MyFileUtils {
 	/*删除缓存文件夹*/
 	public static void deleteDir() {
 		File dir = new File(SD_PATH);
-		if (dir == null || !dir.exists() || !dir.isDirectory())
+		if (!dir.exists() || !dir.isDirectory())
 			return;
 		
 		for (File file : dir.listFiles()) {
@@ -79,7 +77,7 @@ public class MyFileUtils {
 	public static ArrayList<String> getAllFilePath(){
 		ArrayList<String> list=new ArrayList<>();
 		File dir = new File(SD_PATH);
-		if (dir == null || !dir.exists() || !dir.isDirectory())
+		if (!dir.exists() || !dir.isDirectory())
 			return list;
 		for (File file : dir.listFiles()) {
 			if (file.isFile())

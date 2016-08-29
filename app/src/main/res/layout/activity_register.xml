@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.feicuiedu.com.easyshop.user.register.RegisterActivity">
+    android:background="@color/background"
+    tools:context="com.feicuiedu.com.easyshop.user.register.RegisterActivity"
+    tools:ignore="Overdraw">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -19,22 +21,27 @@
         style="@style/AppTheme.EditText.Big"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/dp_50"
-        android:layout_marginRight="@dimen/dp_50"
-        android:layout_marginTop="@dimen/dp_120"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/dp_23"
+        android:layout_marginRight="@dimen/dp_23"
+        android:layout_marginTop="@dimen/dp_31"
+        android:background="@color/white"
         android:drawableLeft="@drawable/selector_ic_person"
-        android:hint="@string/username" />
+        android:hint="@string/username"
+        android:maxLength="20" />
 
     <EditText
         android:id="@+id/et_pwd"
         style="@style/AppTheme.EditText.Big"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
+        android:background="@color/white"
+        android:layout_alignEnd="@+id/et_username"
         android:layout_alignLeft="@+id/et_username"
+        android:layout_alignRight="@+id/et_username"
         android:layout_alignStart="@+id/et_username"
         android:layout_below="@+id/et_username"
-        android:layout_marginRight="@dimen/dp_50"
         android:layout_marginTop="@dimen/dp_6"
         android:drawableLeft="@drawable/selector_ic_lock"
         android:hint="@string/password"
@@ -45,11 +52,13 @@
         style="@style/AppTheme.EditText.Big"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
+        android:layout_alignEnd="@+id/et_pwd"
         android:layout_alignLeft="@+id/et_pwd"
+        android:layout_alignRight="@+id/et_pwd"
         android:layout_alignStart="@+id/et_pwd"
         android:layout_below="@+id/et_pwd"
-        android:layout_marginRight="@dimen/dp_50"
         android:layout_marginTop="@dimen/dp_6"
+        android:background="@color/white"
         android:drawableLeft="@drawable/selector_ic_lock"
         android:hint="@string/pwd_again"
         android:inputType="textPassword" />
@@ -59,20 +68,14 @@
         android:id="@+id/btn_register"
         style="@style/AppTheme.Button.EasyShop"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
+        android:layout_height="@dimen/dp_58"
+        android:layout_alignEnd="@+id/et_pwdAgain"
         android:layout_alignLeft="@+id/et_pwdAgain"
+        android:layout_alignRight="@+id/et_pwdAgain"
         android:layout_alignStart="@+id/et_pwdAgain"
         android:layout_below="@+id/et_pwdAgain"
-        android:layout_marginRight="@dimen/dp_50"
+        android:layout_marginTop="@dimen/dp_40"
         android:enabled="false"
         android:text="@string/register" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="@dimen/dp_120"
-        android:layout_height="@dimen/dp_120"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -8,6 +8,6 @@
         android:id="@+id/ib_recycle_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/add_phone"
+        android:background="@drawable/selector_upload_ic"
         android:gravity="center" />
 </LinearLayout>

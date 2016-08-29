@@ -3,7 +3,7 @@ package com.feicuiedu.com.easyshop.model;
 /**
  * 商品上传时的实体类
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class GoodsLoad {
 
     /*商品名称*/

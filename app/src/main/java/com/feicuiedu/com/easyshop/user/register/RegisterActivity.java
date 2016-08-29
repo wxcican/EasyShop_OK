@@ -7,16 +7,15 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
-import com.feicuiedu.com.easyshop.main.MainActivity;
 import com.feicuiedu.com.easyshop.components.AlertDialogFragment;
+import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
+import com.feicuiedu.com.easyshop.main.MainActivity;
 import com.feicuiedu.com.easyshop.user.EventFinish;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
@@ -39,13 +38,12 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     EditText et_pwdAgain;
     @Bind(R.id.btn_register)
     Button btn_register;
-    @Bind(R.id.progress)
-    ProgressBar progressBar;
 
     private String username;
     private String password;
     private String pwd_again;
     private ActivityUtils activityUtils;
+    private ProgressDialogFragment dialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,12 +133,14 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     public void showProgress() {
         /*强制关闭软键盘*/
         activityUtils.hideSoftKeyboard();
-        progressBar.setVisibility(View.VISIBLE);
+        if (dialogFragment == null) dialogFragment = new ProgressDialogFragment();
+        if (dialogFragment.isVisible()) return;
+        dialogFragment.show(getSupportFragmentManager(), "progress_dialog_fragment");
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.INVISIBLE);
+        dialogFragment.dismiss();
     }
 
     @Override

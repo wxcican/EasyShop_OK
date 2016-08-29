@@ -95,6 +95,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         super.onContentChanged();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initView();

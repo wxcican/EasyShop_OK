@@ -21,6 +21,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
-        android:background="@color/white" />
+        android:background="@color/recycler_bg" />
 
 </RelativeLayout>
