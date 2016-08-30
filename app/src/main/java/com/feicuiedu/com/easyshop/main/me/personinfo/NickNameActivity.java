@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
-import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.LoginResult;
@@ -26,7 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@SuppressWarnings("ALL")
+/**
+ * 个人信息昵称修改的页面
+ */
 public class NickNameActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
@@ -55,14 +56,8 @@ public class NickNameActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) finish();
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     @OnClick(R.id.btn_save)

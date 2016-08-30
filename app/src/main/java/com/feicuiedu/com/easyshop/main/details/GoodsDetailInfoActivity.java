@@ -16,6 +16,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.relex.circleindicator.CircleIndicator;
 
+
+/**
+ * 商品图片展示的详情页面
+ */
 public class GoodsDetailInfoActivity extends AppCompatActivity {
 
     @Bind(R.id.viewpager)
@@ -25,7 +29,6 @@ public class GoodsDetailInfoActivity extends AppCompatActivity {
     CircleIndicator indicator;
 
     private ArrayList<String> list;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

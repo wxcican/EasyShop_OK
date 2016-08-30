@@ -45,6 +45,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 商品上传页
+ */
 public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPresenter> implements GoodsLoadView {
 
     @Bind(R.id.toolbar)
@@ -116,6 +119,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         // 设置固定大小
         recyclerView.setHasFixedSize(true);
+
         list = getFilePhoto();
         adapter = new GoodsLoadAdapter(this, list);
         recyclerView.setAdapter(adapter);
@@ -162,6 +166,23 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         super.onActivityResult(requestCode, resultCode, data);
         // 帮助我们去处理结果(剪切完的图像)
         CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (title_mode == MODE_DONE) {
+            deleteCache();
+            finish();
+        } else if (title_mode == MODE_DELETE)
+            changeModeOnActivity();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (cropHandler.getCropParams() != null)
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+        deleteCache();
+        super.onDestroy();
     }
 
     /*图片裁剪*/
@@ -222,11 +243,12 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
     };
 
     /*图片的点击事件*/
-    private GoodsLoadAdapter.OnItemClickedListener itemClickedListener = new GoodsLoadAdapter.OnItemClickedListener() {
+    private GoodsLoadAdapter.OnItemClickedListener itemClickedListener
+            = new GoodsLoadAdapter.OnItemClickedListener() {
         @Override
         public void onPhotoClicked(ImageItem photo, ImageView imageView) {
             Intent intent = new Intent(GoodsLoadActivity.this, ShowPhoneActivity.class);
-            intent.putExtra("images", photo.getBitmap());//非必须
+            intent.putExtra("images", photo.getBitmap());//必须
             intent.putExtra("width", imageView.getWidth());//必须
             intent.putExtra("height", imageView.getHeight());//必须
             startActivity(intent);
@@ -248,25 +270,11 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         }
     };
 
-    @Override
-    public void onBackPressed() {
-        if (title_mode == MODE_DONE) {
-            deleteCache();
-            finish();
-        } else if (title_mode == MODE_DELETE)
-            changeModeOnActivity();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        if (cropHandler.getCropParams() != null)
-            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
-        deleteCache();
-        super.onDestroy();
-    }
-
-    /*获取缓存文件夹中文件*/
+    /**
+     * 获取缓存文件夹中文件
+     *
+     * @return {@link ImageItem} 列表
+     */
     private ArrayList<ImageItem> getFilePhoto() {
         ArrayList<ImageItem> imageItems = new ArrayList<>();
         File[] files = new File(MyFileUtils.SD_PATH).listFiles();
@@ -276,14 +284,15 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
                 ImageItem image = new ImageItem();
                 image.setImagePath(file.getName());
                 image.setBitmap(bitmap);
-                image.setIsSend(true);
                 imageItems.add(image);
             }
         }
         return imageItems;
     }
 
-    /* 按返回键改变适配中布局的状态|改变标题删除按钮状态|改变适配器中checkbox的选择状态*/
+    /**
+     * 按返回键改变适配中布局的状态|改变标题删除按钮状态|改变适配器中checkbox的选择状态
+     */
     private void changeModeOnActivity() {
         if (adapter.getMode() == GoodsLoadAdapter.MODE_MULTI_SELECT) {
             tv_goods_delete.setVisibility(View.GONE);
@@ -295,11 +304,26 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         }
     }
 
-    /*删除缓存文件*/
+    /**
+     * 删除缓存文件夹中的文件
+     */
     private void deleteCache() {
         for (int i = 0; i < adapter.getList().size(); i++) {
             MyFileUtils.delFile(adapter.getList().get(i).getImagePath());
         }
+    }
+
+    /**
+     * 对商品信息初始化
+     */
+    private GoodsLoad setGoodInfo() {
+        GoodsLoad goodsLoad = new GoodsLoad();
+        goodsLoad.setName(str_goods_name);
+        goodsLoad.setPrice(str_goods_price);
+        goodsLoad.setDescribe(str_goods_describe);
+        goodsLoad.setType(str_goods_type);
+        goodsLoad.setMaster(CurrentUser.getUser().getName());
+        return goodsLoad;
     }
 
     @OnClick({R.id.btn_goods_type, R.id.tv_goods_delete, R.id.btn_goods_load})
@@ -340,17 +364,6 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
                 presenter.upload(setGoodInfo(), list);
                 break;
         }
-    }
-
-    /*初始化商品信息*/
-    private GoodsLoad setGoodInfo() {
-        GoodsLoad goodsLoad = new GoodsLoad();
-        goodsLoad.setName(str_goods_name);
-        goodsLoad.setPrice(str_goods_price);
-        goodsLoad.setDescribe(str_goods_describe);
-        goodsLoad.setType(str_goods_type);
-        goodsLoad.setMaster(CurrentUser.getUser().getName());
-        return goodsLoad;
     }
 
     @Override

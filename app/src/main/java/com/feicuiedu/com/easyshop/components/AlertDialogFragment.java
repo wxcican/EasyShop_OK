@@ -10,12 +10,15 @@ import android.support.v4.app.DialogFragment;
 import com.feicuiedu.com.easyshop.R;
 
 
+/**
+ * 自定义的消息弹窗,用来消息提示,不做其它用途
+ */
 public class AlertDialogFragment extends DialogFragment {
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_MESSAGE = "message";
 
-    public static AlertDialogFragment newInstance(int title){
+    public static AlertDialogFragment newInstance(int title) {
         AlertDialogFragment fragment = new AlertDialogFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_TITLE, title);
@@ -23,7 +26,7 @@ public class AlertDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public static AlertDialogFragment newInstance(int title, String msg){
+    public static AlertDialogFragment newInstance(int title, String msg) {
         AlertDialogFragment fragment = new AlertDialogFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_TITLE, title);

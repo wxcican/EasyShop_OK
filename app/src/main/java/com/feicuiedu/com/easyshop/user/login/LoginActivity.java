@@ -71,7 +71,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
             btn_login.setEnabled(canLogin);
         }
     };
-
+    
     private void init() {
         et_userName.addTextChangedListener(textWatcher);
         et_pwd.addTextChangedListener(textWatcher);

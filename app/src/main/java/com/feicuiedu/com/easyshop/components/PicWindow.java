@@ -13,11 +13,20 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
+/**
+ * 自定义PopupWindow,用于图片的选择
+ */
 public class PicWindow extends PopupWindow {
 
     public interface Listener {
+        /**
+         * 来自相册
+         */
         void toGallery();
 
+        /**
+         * 来自相机
+         */
         void toCamera();
     }
 

@@ -57,10 +57,6 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
-    public void remove(int index) {
-        list.remove(index);
-    }
-
     public void notifyDataSet() {
         notifyDataSetChanged();
     }
@@ -154,19 +150,33 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return Math.min(list.size() + 1, 8);
     }
 
-    /*RecycleView中item点击事件*/
+    /**
+     * RecycleView中item点击事件
+     */
     public interface OnItemClickedListener {
-        /*单击照片的监听事件*/
+
+        /**
+         * 单击图片的监听事件
+         *
+         * @param photo     {@link ImageItem}
+         * @param imageView 点击图片对应的ImageView
+         */
         void onPhotoClicked(ImageItem photo, ImageView imageView);
 
-        /*添加按钮的监听事件*/
+        /**
+         * 添加按钮的监听事件
+         */
         void onAddClicked();
 
-        /*长按照片的监听事件*/
+        /**
+         * 长按照片的监听事件
+         */
         void onLongClicked();
     }
 
-    /*图片布局*/
+    /**
+     * 图片布局
+     */
     public static class ItemSelectViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.iv_photo)
@@ -181,7 +191,9 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    /*添加按钮布局*/
+    /**
+     * 商品图片添加按钮布局
+     */
     public static class ItemAddViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.ib_recycle_add)
         ImageButton ib_add;

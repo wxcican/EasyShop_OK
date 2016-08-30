@@ -108,14 +108,8 @@ public class PersonInfoActivity extends MvpActivity<PersonInfoView, PersonInfoPr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) finish();
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     /*用户信息的单行点击事件*/

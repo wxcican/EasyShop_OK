@@ -9,11 +9,17 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class GoodsDetail implements Serializable {
 
+    /*名称*/
     private String name;
+    /*类型*/
     private String type;
+    /*价格*/
     private String price;
+    /*商品描述*/
     private String description;
+    /*发布者*/
     private String master;
+    /*商品图片uri*/
     private List<ImageUri> pages;
 
     public String getName() {

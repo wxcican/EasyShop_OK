@@ -11,10 +11,20 @@ import java.io.Serializable;
 /**
  * 图片上传时,Item布局对应的实体
  */
+@SuppressWarnings("unused")
 public class ImageItem implements Serializable {
+    /**
+     * 图片路径
+     */
     public String imagePath;
+
+    /**
+     * 图片是否选中状态,默认为false
+     */
     private boolean isCheck = false;
-    private boolean isSend = false;
+    /**
+     * 根据图片路径获得BitMap
+     */
     private Bitmap bitmap;
 
     public String getImagePath() {
@@ -31,14 +41,6 @@ public class ImageItem implements Serializable {
 
     public void setIsCheck(boolean isCheck) {
         this.isCheck = isCheck;
-    }
-
-    public boolean isSend() {
-        return isSend;
-    }
-
-    public void setIsSend(boolean isSend) {
-        this.isSend = isSend;
     }
 
     public Bitmap getBitmap() {

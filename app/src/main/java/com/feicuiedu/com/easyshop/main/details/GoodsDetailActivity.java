@@ -58,6 +58,7 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
 
     private Map<String, String> map;
     private ArrayList<ImageView> list;
+    /*用来存放图片uri的list*/
     private ArrayList<String> list_uri;
     private GoodsDetailAdapter adapter;
     private ProgressDialogFragment dialogFragment;
@@ -81,6 +82,7 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         init();
         viewPager.setAdapter(adapter);
+        /*ViewPager的Item单击事件*/
         adapter.setListener(new GoodsDetailAdapter.OnItemClickListener() {
             @Override
             public void onItemClick() {
@@ -97,10 +99,14 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
         return new GoodsDetailPresenter();
     }
 
+    /*对页面数据进行初始化*/
     private void init() {
+        /*商品在商品表中的主键*/
         String str_uuid = getIntent().getStringExtra("uuid");
+        /*从不同页面进入详情页面的状态值,0为默认值,1是我的商品页面进入*/
         int btn_show = getIntent().getIntExtra("state", 0);
         if (btn_show == 1) {
+            /*我的商品页面进入显示删除按钮,隐藏下方联系按钮*/
             tv_goods_delete.setVisibility(View.VISIBLE);
             btn_detail_message.setVisibility(View.GONE);
             btn_detail_call.setVisibility(View.GONE);

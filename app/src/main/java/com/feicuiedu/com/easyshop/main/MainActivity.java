@@ -17,6 +17,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 易淘首页面
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    /*进入页面数据初始化,默认显示为商城页面*/
     private void init() {
         textChange(pageInt);
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), pageInt));

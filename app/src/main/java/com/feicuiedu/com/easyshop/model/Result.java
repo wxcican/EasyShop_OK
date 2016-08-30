@@ -3,7 +3,7 @@ package com.feicuiedu.com.easyshop.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * 网络请求返回的状态值
+ * 上传商品时,网络请求返回的实体
  */
 @SuppressWarnings("unused")
 public class Result {

@@ -15,11 +15,11 @@ public class GoodsInfo implements Serializable {
     private String page;
     /*商品名称*/
     private String name;
-    /*主键*/
+    /*商品在商品表中的主键*/
     private String uuid;
     /*商品类型*/
     private String type;
-    /*商品的所有人*/
+    /*商品的发布者*/
     private String master;
 
     public void setId(String id) {

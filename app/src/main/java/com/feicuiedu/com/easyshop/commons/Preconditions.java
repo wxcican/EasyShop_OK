@@ -7,10 +7,4 @@ public class Preconditions {
             throw new RuntimeException("CheckNonNull fail: "+ info);
         }
     }
-
-    public static void checkCondition(boolean isPass, String info){
-        if (!isPass){
-            throw new RuntimeException("checkCondition fail: "+ info);
-        }
-    }
 }

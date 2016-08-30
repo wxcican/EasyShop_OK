@@ -14,15 +14,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+/**
+ * 自定义的DialogFragment,相当于ProgressBar的功能
+ * 弹出该控件后,屏蔽返回按钮以及屏幕上的点击事件
+ */
 public class ProgressDialogFragment extends DialogFragment {
 
-    public ProgressDialogFragment(){
+    public ProgressDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(false);
     }
@@ -30,7 +33,7 @@ public class ProgressDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog =  super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
 
         Window window = dialog.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(0));

@@ -11,7 +11,7 @@
     <style name="AppTheme.Main" parent="AppTheme">
         <!-- 隐藏状态栏 -->
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@drawable/first_pager</item>
+        <item name="android:windowBackground">@drawable/easyshop</item>
     </style>
 
     <style name="AppTheme.Button.EasyShop" parent="Widget.AppCompat.Button.Colored">

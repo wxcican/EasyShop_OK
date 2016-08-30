@@ -1,6 +1,5 @@
 package com.feicuiedu.com.easyshop.main.me.goodsload;
 
-import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.commons.MyFileUtils;
 import com.feicuiedu.com.easyshop.model.GoodsLoad;
 import com.feicuiedu.com.easyshop.model.ImageItem;
@@ -24,6 +23,7 @@ import retrofit2.Response;
 
 public class GoodsLoadPresenter extends MvpNullObjectBasePresenter<GoodsLoadView> {
 
+    /*商品上传*/
     public void upload(GoodsLoad goodsLoad, List<ImageItem> list) {
         getView().showProgress();
         String str = new Gson().toJson(goodsLoad);
@@ -52,6 +52,11 @@ public class GoodsLoadPresenter extends MvpNullObjectBasePresenter<GoodsLoadView
         });
     }
 
+    /**
+     * 根据图片路径装换为MultipartBody.Part
+     *
+     * @param list {@link ImageItem} 的列表
+     */
     private List<MultipartBody.Part> getFiles(List<ImageItem> list) {
         List<MultipartBody.Part> parts = new ArrayList<>(list.size());
         for (ImageItem imageItem : list) {

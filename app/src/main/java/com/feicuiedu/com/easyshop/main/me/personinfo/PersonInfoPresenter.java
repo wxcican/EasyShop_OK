@@ -20,11 +20,12 @@ import retrofit2.Response;
 
 public class PersonInfoPresenter extends MvpNullObjectBasePresenter<PersonInfoView> {
 
+    /*上传头像*/
     public void uploadAvatar(File file) {
         getView().showProgress();
         User user = CurrentUser.getUser();
         String str = new Gson().toJson(user);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("file",file.getName(),RequestBody.create(MediaType.parse("image/png"), file));
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
         Call<ResponseBody> call = EasyClient.getInstance().update(str, part);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

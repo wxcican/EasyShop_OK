@@ -74,11 +74,13 @@ public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetail
                 .setCallback(delete_callback);
     }
 
+    /*获取商品的详细数据*/
     public void getData(Map<String, String> mapUuid) {
         getView().showProgress();
         EasyShopClient.getInstance().addToRequestQueue(get_data_builder.setParams(mapUuid).build());
     }
 
+    /*删除商品*/
     public void delete(Map<String, String> mapUuid) {
         getView().showProgress();
         EasyShopClient.getInstance().addToRequestQueue(delete_builder.setParams(mapUuid).build());

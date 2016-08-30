@@ -20,12 +20,20 @@ public class PersonGoodsPresenter extends MvpNullObjectBasePresenter<ShopView> {
 
     private HashMap<String, String> postMap;
 
+    /**
+     * 下拉刷新
+     * @param postMap 请求表单对应的Map
+     */
     public void refreshData(HashMap<String, String> postMap) {
         this.postMap = postMap;
         getView().showRefresh();
         EasyShopClient.getInstance().addToRequestQueue(refreshRequest);
     }
 
+    /**
+     * 上拉加载
+     * @param postMap 请求表单对应的Map
+     */
     public void loadData(HashMap<String, String> postMap) {
         this.postMap = postMap;
         getView().showLoadMoreLoading();

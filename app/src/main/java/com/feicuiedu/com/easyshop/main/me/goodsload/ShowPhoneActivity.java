@@ -12,6 +12,9 @@ import com.feicuiedu.com.easyshop.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * 展示商品上传图片的详情页
+ */
 public class ShowPhoneActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)

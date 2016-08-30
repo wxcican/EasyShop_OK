@@ -21,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * 商品展示的瀑布流
+ * 商品展示的适配器
  */
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
@@ -30,6 +30,16 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
     public void setListener(OnItemClickedListener listener) {
         this.listener = listener;
+    }
+
+    public void addData(List<GoodsInfo> data) {
+        list.addAll(data);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        list.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,16 +75,6 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
         return list.size();
     }
 
-    public void addData(List<GoodsInfo> data) {
-        list.addAll(data);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
-        list.clear();
-        notifyDataSetChanged();
-    }
-
     public static class GoodsView extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_item_recycler)
         ImageView imageView;
@@ -89,8 +89,10 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
         }
     }
 
+    /**
+     * 单击照片的监听事件
+     */
     public interface OnItemClickedListener {
-        /*单击照片的监听事件*/
         void onPhotoClicked(GoodsInfo goodsInfo);
     }
 }

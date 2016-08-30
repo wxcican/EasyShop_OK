@@ -30,10 +30,15 @@ import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler2;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
-public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresenter> implements ShopView<List<GoodsInfo>> {
+/**
+ * 我的商品页
+ */
+public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresenter>
+        implements ShopView<List<GoodsInfo>> {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    /*下拉刷新和上拉加载的控件*/
     @Bind(R.id.refreshLayout)
     PtrClassicFrameLayout ptrFrameLayout;
     @Bind(R.id.recyclerView)
@@ -79,15 +84,7 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         initData();
         initView();
         recyclerView.setAdapter(goodsAdapter);
-        /*当前页面没有数据时,刷新*/
-        if (goodsAdapter.getItemCount() == 0) {
-            ptrFrameLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ptrFrameLayout.autoRefresh();
-                }
-            }, 200);
-        }
+
         goodsAdapter.setListener(new GoodsAdapter.OnItemClickedListener() {
             @Override
             public void onPhotoClicked(GoodsInfo goodsInfo) {
@@ -142,6 +139,9 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         shopMap.put("master", CurrentUser.getUser().getName());
     }
 
+    /**
+     * ToolBar菜单对应的单击事件
+     */
     private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -179,21 +179,23 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         }
     };
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        ptrFrameLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ptrFrameLayout.autoRefresh();
-            }
-        }, 200);
+        /*每次进入这个页面,当前页面没有数据时,刷新*/
+        if (goodsAdapter.getItemCount() == 0) {
+            ptrFrameLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ptrFrameLayout.autoRefresh();
+                }
+            }, 200);
+        }
     }
 
-    /*ToolBar设置菜单选项*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        /*ToolBar设置菜单选项*/
         getMenuInflater().inflate(R.menu.menu_goods_type, menu);
         return true;
     }
@@ -206,14 +208,8 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) finish();
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     @Override
@@ -279,9 +275,7 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
     @Override
     public void addRefreshData(List<GoodsInfo> data) {
         goodsAdapter.clear();
-        if (data != null) {
-            goodsAdapter.addData(data);
-        }
+        if (data != null) goodsAdapter.addData(data);
     }
 
     @Override

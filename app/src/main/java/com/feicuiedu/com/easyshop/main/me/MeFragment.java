@@ -22,7 +22,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
+/**
+ * 我的页面对应的Fragment
+ */
 public class MeFragment extends Fragment {
 
     private static final String KEY_GENRE = "key_genre";
@@ -60,6 +62,7 @@ public class MeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        /*进入页面是回去头像*/
         ImageLoader imageLoader = EasyShopClient.getInstance().getImageLoader();
         ImageLoader.ImageListener imageListener = imageLoader.getImageListener(
                 iv_user_head, R.drawable.user_ico, R.drawable.user_ico

@@ -8,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * 自定义的文件工具类(上传商品图片时,用到)
+ */
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class MyFileUtils {
 	

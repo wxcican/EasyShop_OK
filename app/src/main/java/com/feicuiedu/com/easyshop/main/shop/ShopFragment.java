@@ -67,9 +67,7 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
      * 获取商品时,商品的类型,获取全部商品时为空
      */
     private String pageType = "";
-
     private View view;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,25 +95,9 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initData();
         initView();
         recyclerView.setAdapter(goodsAdapter);
-        /*当前页面没有数据时,刷新*/
-        if (goodsAdapter.getItemCount() == 0) {
-            ptrLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ptrLayout.autoRefresh();
-                }
-            }, 200);
-        }
-    }
-
-    /*点击错误视图时刷新数据*/
-    @OnClick(R.id.tv_load_error)
-    public void onClick() {
-        ptrLayout.autoRefresh();
     }
 
     /*RecyclerView和PtrClassicFrameLayout的初始化*/
@@ -168,26 +150,30 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
         shopMap.put("type", pageType);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ptrLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ptrLayout.autoRefresh();
-            }
-        }, 200);
+    /*点击错误视图时刷新数据*/
+    @OnClick(R.id.tv_load_error)
+    public void onClick() {
+        ptrLayout.autoRefresh();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        pageInt = 1;
+    public void onStart() {
+        super.onStart();
+        /*当前页面没有数据时,刷新*/
+        if (goodsAdapter.getItemCount() == 0) {
+            ptrLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ptrLayout.autoRefresh();
+                }
+            }, 200);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        /*取消网络请求*/
         EasyShopClient.getInstance().cancelRequest(presenter.refreshRequest);
         EasyShopClient.getInstance().cancelRequest(presenter.loadRequest);
     }
