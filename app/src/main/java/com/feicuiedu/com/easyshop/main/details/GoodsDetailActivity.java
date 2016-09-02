@@ -1,6 +1,6 @@
 package com.feicuiedu.com.easyshop.main.details;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,18 +15,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.components.AvatarLoadOptions;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
 import com.feicuiedu.com.easyshop.model.GoodsDetail;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
-import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +33,16 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetailPresenter>
         implements GoodsDetailView {
+
+    private static final String UUID = "uuid";
+    private static final String STATE = "state";
+
+    public static Intent getStartIntent(Context context, String uuid, int state) {
+        Intent intent = new Intent(context, GoodsDetailActivity.class);
+        intent.putExtra(UUID, uuid);
+        intent.putExtra(STATE, state);
+        return intent;
+    }
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -51,12 +59,14 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     TextView tv_detail_describe;
     @Bind(R.id.tv_goods_delete)
     TextView tv_goods_delete;
+    @Bind(R.id.tv_goods_error)
+    TextView tv_goods_error;
     @Bind(R.id.btn_detail_message)
     Button btn_detail_message;
     @Bind(R.id.btn_detail_call)
     Button btn_detail_call;
 
-    private Map<String, String> map;
+    private String str_uuid;
     private ArrayList<ImageView> list;
     /*用来存放图片uri的list*/
     private ArrayList<String> list_uri;
@@ -86,8 +96,7 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
         adapter.setListener(new GoodsDetailAdapter.OnItemClickListener() {
             @Override
             public void onItemClick() {
-                Intent intent = new Intent(GoodsDetailActivity.this, GoodsDetailInfoActivity.class);
-                intent.putExtra("images", list_uri);
+                Intent intent = GoodsDetailInfoActivity.getStartIntent(GoodsDetailActivity.this, list_uri);
                 startActivity(intent);
             }
         });
@@ -102,18 +111,16 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     /*对页面数据进行初始化*/
     private void init() {
         /*商品在商品表中的主键*/
-        String str_uuid = getIntent().getStringExtra("uuid");
+        str_uuid = getIntent().getStringExtra(UUID);
         /*从不同页面进入详情页面的状态值,0为默认值,1是我的商品页面进入*/
-        int btn_show = getIntent().getIntExtra("state", 0);
+        int btn_show = getIntent().getIntExtra(STATE, 0);
         if (btn_show == 1) {
             /*我的商品页面进入显示删除按钮,隐藏下方联系按钮*/
             tv_goods_delete.setVisibility(View.VISIBLE);
             btn_detail_message.setVisibility(View.GONE);
             btn_detail_call.setVisibility(View.GONE);
         }
-        map = new HashMap<>();
-        map.put("uuid", str_uuid);
-        presenter.getData(map);
+        presenter.getData(str_uuid);
     }
 
     @Override
@@ -126,11 +133,9 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     private void getImage(ArrayList<String> list) {
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            ImageLoader imageLoader = EasyShopClient.getInstance().getImageLoader();
-            ImageLoader.ImageListener imageListener = imageLoader.getImageListener(
-                    imageView, R.drawable.user_ico, R.drawable.user_ico
-            );
-            imageLoader.get(EasyShopApi.IMAGE_URL + list.get(i), imageListener);
+            ImageLoader.getInstance()
+                    .displayImage(EasyShopApi.IMAGE_URL + list.get(i),
+                            imageView, AvatarLoadOptions.build_item());
             this.list.add(imageView);
         }
     }
@@ -139,6 +144,7 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_detail_call:
+                /*需要袁崇杰hx的电话号*/
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:10086"));
                 try {
                     startActivity(intent);
@@ -151,15 +157,15 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
                 break;
             case R.id.tv_goods_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("商品删除");
-                builder.setMessage("是否删除该商品？");
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.goods_title_delete);
+                builder.setMessage(R.string.goods_info_delete);
+                builder.setPositiveButton(R.string.goods_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.delete(map);
+                        presenter.delete(str_uuid);
                     }
                 });
-                builder.setNegativeButton("取消", null);
+                builder.setNegativeButton(R.string.popu_cancle, null);
                 builder.create().show();
                 break;
         }
@@ -187,12 +193,17 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
         indicator.setViewPager(viewPager);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void setData(GoodsDetail data) {
         tv_detail_name.setText(data.getName());
-        tv_detail_price.setText(data.getPrice() + "￥");
+        tv_detail_price.setText(getString(R.string.goods_money, data.getPrice()));
         tv_detail_describe.setText(data.getDescription());
+    }
+
+    @Override
+    public void showError() {
+        tv_goods_error.setVisibility(View.VISIBLE);
+        toolbar.setTitle(R.string.goods_overdue);
     }
 
     @Override

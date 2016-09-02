@@ -31,7 +31,4 @@ public class CurrentUser {
         return user;
     }
 
-    public static String getUserId() {
-        return userId;
-    }
 }

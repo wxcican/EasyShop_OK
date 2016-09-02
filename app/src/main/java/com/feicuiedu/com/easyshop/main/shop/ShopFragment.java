@@ -15,10 +15,8 @@ import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.main.details.GoodsDetailActivity;
 import com.feicuiedu.com.easyshop.model.GoodsInfo;
-import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -33,7 +31,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * 商城展示的Fragment
  */
 public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
-        implements ShopView<List<GoodsInfo>> {
+        implements ShopView{
 
     private static final String KEY_GENRE = "key_genre";
 
@@ -58,16 +56,10 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
 
     private ActivityUtils activityUtils;
     private GoodsAdapter goodsAdapter;
-    private HashMap<String, String> shopMap;
-    /**
-     * 获取商品时,分页下标
-     */
-    private int pageInt = 1;
     /**
      * 获取商品时,商品的类型,获取全部商品时为空
      */
     private String pageType = "";
-    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +71,8 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_shop, container, false);
-            ButterKnife.bind(this, view);
-        }
+        View view = inflater.inflate(R.layout.fragment_shop, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -95,7 +85,6 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initData();
         initView();
         recyclerView.setAdapter(goodsAdapter);
     }
@@ -110,44 +99,25 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
         ptrLayout.setBackgroundResource(R.color.recycler_bg);
         /*关闭Header所耗时长*/
         ptrLayout.setDurationToCloseHeader(1500);
-
         ptrLayout.setPtrHandler(new PtrDefaultHandler2() {
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
-                onLoaNextPage();
-                presenter.loadData(shopMap);
+                presenter.loadData(pageType);
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                initData();
-                presenter.refreshData(shopMap);
+                presenter.refreshData(pageType);
             }
         });
         /*商城页,商品的单击事件*/
         goodsAdapter.setListener(new GoodsAdapter.OnItemClickedListener() {
             @Override
             public void onPhotoClicked(GoodsInfo goodsInfo) {
-                Intent intent = new Intent(getContext(), GoodsDetailActivity.class);
-                intent.putExtra("uuid", goodsInfo.getUuid());
+                Intent intent = GoodsDetailActivity.getStartIntent(getContext(), goodsInfo.getUuid(), 0);
                 startActivity(intent);
             }
         });
-    }
-
-    /*刚进入页面时请求数据的初始化*/
-    private void initData() {
-        shopMap = new HashMap<>();
-        pageInt = 1;
-        shopMap.put("pageNo", pageInt + "");
-        shopMap.put("type", pageType);
-    }
-
-    /*上拉加载时请求数据中Page下标的累加*/
-    private void onLoaNextPage() {
-        pageInt++;
-        shopMap.put("pageNo", pageInt + "");
-        shopMap.put("type", pageType);
     }
 
     /*点击错误视图时刷新数据*/
@@ -171,17 +141,7 @@ public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        /*取消网络请求*/
-        EasyShopClient.getInstance().cancelRequest(presenter.refreshRequest);
-        EasyShopClient.getInstance().cancelRequest(presenter.loadRequest);
-    }
-
-    @Override
     public void showRefresh() {
-        /*数据刷新时,重置pageInt*/
-        pageInt = 1;
         tv_load_error.setVisibility(View.INVISIBLE);
     }
 

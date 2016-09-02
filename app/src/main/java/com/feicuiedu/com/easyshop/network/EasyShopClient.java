@@ -1,94 +1,214 @@
 package com.feicuiedu.com.easyshop.network;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.LruCache;
+import com.feicuiedu.com.easyshop.model.CurrentUser;
+import com.feicuiedu.com.easyshop.model.GoodsLoad;
+import com.feicuiedu.com.easyshop.model.User;
+import com.google.gson.Gson;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-/**
- * <p>
- * 网络连接的工具类,通过单列模式设计.对{@link RequestQueue}进行封装。
- * </p>
- */
-@SuppressWarnings("unused")
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 public class EasyShopClient {
 
-    private static EasyShopClient sInstance;
-
-    public static synchronized EasyShopClient getInstance() {
-        if (sInstance == null) {
-            sInstance = new EasyShopClient();
-        }
-        return sInstance;
-    }
-
-
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
-    private boolean isInit;
+    private OkHttpClient okHttpClient = null;
+    private Gson gson;
 
     private EasyShopClient() {
 
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)/*添加拦截器，打印请求和响应的日志*/
+                .connectTimeout(10, TimeUnit.SECONDS)  // 连接超时
+                .writeTimeout(10, TimeUnit.SECONDS)    // Socket写超时
+                .readTimeout(30, TimeUnit.SECONDS)     // Socket读超时
+                .build();
+        gson = new Gson();
     }
 
-    public void init(Context context) {
+    private static EasyShopClient mInstance;
 
-        isInit = true;
-        requestQueue = Volley.newRequestQueue(context);
-
-        imageLoader = new ImageLoader(requestQueue,
-                new ImageLoader.ImageCache() {
-                    private final LruCache<String, Bitmap>
-                            cache = new LruCache<>(20);
-
-                    @Override
-                    public Bitmap getBitmap(String url) {
-                        return cache.get(url);
-                    }
-
-                    @Override
-                    public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
-                    }
-                });
-    }
-
-
-    /**
-     * 添加一个请求到RequestQueue队列
-     */
-    public void addToRequestQueue(Request req) {
-        checkInit();
-        requestQueue.add(req);
-    }
-
-    /**
-     * 获取ImageLoader 实例
-     */
-    public ImageLoader getImageLoader() {
-        checkInit();
-        return imageLoader;
-    }
-
-    /**
-     * 取消RequestQueue队列中所有请求
-     */
-    public <T> void cancelRequest(Object tag) {
-        checkInit();
-        requestQueue.cancelAll(tag);
-    }
-
-    /**
-     * 判断该类是否初始化
-     */
-    private void checkInit() {
-        if (!isInit) {
-            throw new RuntimeException("You have to init first.");
+    public static synchronized EasyShopClient getInstance() {
+        if (mInstance == null) {
+            mInstance = new EasyShopClient();
         }
+        return mInstance;
+    }
+
+    /**
+     * 登录
+     *
+     * @param username 用户名
+     * @param password 密码
+     */
+    public Call login(String username, String password) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.LOGIN)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 注册
+     *
+     * @param username 用户名
+     * @param password 密码
+     */
+    public Call register(String username, String password) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.REGISTER)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 更新用户头像
+     *
+     * @param file 要更新的头像文件
+     */
+    public Call uploadAvatar(File file) {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user", gson.toJson(CurrentUser.getUser()))
+                .addFormDataPart("image", file.getName(),
+                        RequestBody.create(MediaType.parse("image/png"), file))
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.UPDATE)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 修改用户昵称
+     *
+     * @param user 用户实体类
+     */
+    public Call uploadUser(User user) {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user", gson.toJson(user))
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.UPDATE)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 获取商品数据
+     *
+     * @param pageNo 商品分页
+     * @param type   商品类型
+     */
+    public Call getData(int pageNo, String type) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("pageNo", String.valueOf(pageNo))
+                .add("type", type)
+                .build();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 获取个人商品数据
+     *
+     * @param pageNo 商品分页
+     * @param type   商品类型
+     * @param master 商品发布者
+     */
+    public Call getPersonData(int pageNo, String type, String master) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("pageNo", String.valueOf(pageNo))
+                .add("type", type)
+                .add("master", master)
+                .build();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+
+    /**
+     * 获取商品详情
+     *
+     * @param goodsUuid 商品表中的商品主键
+     */
+    public Call getGoodsData(String goodsUuid) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("uuid", goodsUuid)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.DETAIL)
+                .post(requestBody)
+                .build();
+
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 删除商品
+     *
+     * @param goodsUuid 商品表中的商品主键
+     */
+    public Call deleteGoods(String goodsUuid) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("uuid", goodsUuid)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.DELETE)
+                .post(requestBody)
+                .build();
+
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 商品上传
+     *
+     * @param goodsLoad 商品上传时对应的实体类
+     * @param files     商品图片
+     */
+    public Call upload(GoodsLoad goodsLoad, ArrayList<File> files) {
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("good", gson.toJson(goodsLoad));
+        for (File file : files) {
+            builder.addFormDataPart("image", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
+        }
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.ADD)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
     }
 }
-

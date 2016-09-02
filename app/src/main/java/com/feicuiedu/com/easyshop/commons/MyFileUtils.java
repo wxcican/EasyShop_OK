@@ -20,7 +20,7 @@ public class MyFileUtils {
 	public static void saveBitmap(Bitmap bm, String picName) {
 		try {
 			if (!isFileExist("")) {
-				createSDDir("");
+				createSDDir();
 			}
 			File f = new File(SD_PATH, picName + ".JPEG");
 			if (f.exists()) {
@@ -35,8 +35,9 @@ public class MyFileUtils {
 		}
 	}
 
-	public static File createSDDir(String dirName) throws IOException {
-		File dir = new File(SD_PATH + dirName);
+	@SuppressWarnings("UnusedReturnValue")
+	public static File createSDDir() throws IOException {
+		File dir = new File(SD_PATH + "");
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 
@@ -47,7 +48,7 @@ public class MyFileUtils {
 	}
 
 	public static boolean isFileExist(String fileName) {
-		File file = new File(SD_PATH + fileName);
+		File file = new File(SD_PATH + "");
 		file.isFile();
 		return file.exists();
 	}
@@ -77,6 +78,7 @@ public class MyFileUtils {
 	}
 
 	/*返回文件的(路径+文件名)的字符串集合*/
+	@SuppressWarnings("UnusedReturnValue")
 	public static ArrayList<String> getAllFilePath(){
 		ArrayList<String> list=new ArrayList<>();
 		File dir = new File(SD_PATH);

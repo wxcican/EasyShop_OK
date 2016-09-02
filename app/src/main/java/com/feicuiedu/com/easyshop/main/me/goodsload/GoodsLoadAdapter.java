@@ -61,6 +61,7 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void changeMode(int mode) {
         this.mode = mode;
         notifyDataSetChanged();

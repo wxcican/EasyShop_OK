@@ -156,13 +156,7 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
 
     @Override
     public void showUserPasswordError(String msg) {
-        AlertDialogFragment fragment = AlertDialogFragment.newInstance(R.string.username_pwd_rule, msg);
+        AlertDialogFragment fragment = AlertDialogFragment.newInstance(msg);
         fragment.show(getSupportFragmentManager(), getString(R.string.username_pwd_rule));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.onDestroy();
     }
 }

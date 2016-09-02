@@ -48,6 +48,9 @@ public class GoodsDetailAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    /**
+     * ViewPager中Item的单击事件
+     */
     public interface OnItemClickListener {
         void onItemClick();
     }

@@ -15,7 +15,7 @@ import java.util.List;
  *
  */
 @SuppressWarnings("unused")
-public final class FileUtils {
+final class FileUtils {
 
     private static final int MAX_DIRECTORY_SCAN_DEPTH = 30;
     private static final String FILE_PROTOCOL = "file://";
@@ -69,6 +69,7 @@ public final class FileUtils {
         }
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean deleteDirectory(@NonNull final File dir) {
         final File[] files = dir.listFiles();
 

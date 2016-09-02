@@ -37,6 +37,12 @@
     <string name="goods_phone">图片详情</string>
     <string name="goods_details">商品详情</string>
 
+    <string name="goods_title_delete">商品删除</string>
+    <string name="goods_info_delete">是否删除该商品？</string>
+
+    <string name="goods_money">%s￥</string>
+
+
     <string name="goods_detail_message">发消息</string>
     <string name="goods_detail_call">联系他</string>
 
@@ -44,6 +50,8 @@
     <string name="load_more_end">没有更多数据</string>
     <string name="load_more_empty">你没有上传过该类商品</string>
     <string name="refresh_more_end">没有新的商品了！</string>
+    <string name="goods_overdue">商品过期不存在</string>
+    <string name="goods_delete_master">商品可能已经让他的主人删除了！</string>
 
     <string name="me_person_info">个人信息</string>
     <string name="me_person_goods">我的商品</string>

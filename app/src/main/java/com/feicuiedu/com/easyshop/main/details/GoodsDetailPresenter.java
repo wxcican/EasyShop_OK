@@ -1,33 +1,38 @@
 package com.feicuiedu.com.easyshop.main.details;
 
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
 import com.feicuiedu.com.easyshop.model.GoodsDetail;
 import com.feicuiedu.com.easyshop.model.GoodsDetailResult;
-import com.feicuiedu.com.easyshop.network.EasyShopApi;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
-import com.feicuiedu.com.easyshop.network.GsonRequest;
+import com.feicuiedu.com.easyshop.network.UICallback;
+import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
+
+import okhttp3.Call;
 
 public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetailView> {
 
-    private final GsonRequest.Builder<GoodsDetailResult> get_data_builder;
-    private final GsonRequest.Builder<GoodsDetailResult> delete_builder;
+    private Call getDetailCall;
+    private Call deleteCall;
 
-    public GoodsDetailPresenter() {
-        GsonRequest.Callback<GoodsDetailResult> callback = new GsonRequest.Callback<GoodsDetailResult>() {
+    /*获取商品的详细数据*/
+    public void getData(String uuid) {
+        getView().showProgress();
+        getDetailCall = EasyShopClient.getInstance().getGoodsData(uuid);
+        getDetailCall.enqueue(new UICallback() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailureInUi(Call call, IOException e) {
                 getView().hideProgress();
-                getView().showMessage(error.toString());
+                getView().showMessage(e.toString());
             }
 
             @Override
-            public void onGsonResponse(GoodsDetailResult goodsDetailResult) {
+            public void onResponseInUi(Call call, String body) {
                 getView().hideProgress();
+                GoodsDetailResult goodsDetailResult = new Gson().
+                        fromJson(body, GoodsDetailResult.class);
                 if (goodsDetailResult.getCode() == 1) {
                     GoodsDetail goodsDetail = goodsDetailResult.getDatas();
                     ArrayList<String> list = new ArrayList<>();
@@ -37,52 +42,39 @@ public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetail
                     getView().setImageData(list);
                     getView().setData(goodsDetail);
                 } else {
-                    getView().showMessage(goodsDetailResult.getMessage());
+                    getView().showError();
                 }
             }
-        };
+        });
+    }
 
-        GsonRequest.Callback<GoodsDetailResult> delete_callback = new GsonRequest.Callback<GoodsDetailResult>() {
+    /*删除商品*/
+    public void delete(String uuid) {
+        deleteCall = EasyShopClient.getInstance().deleteGoods(uuid);
+        deleteCall.enqueue(new UICallback() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailureInUi(Call call, IOException e) {
                 getView().hideProgress();
-                getView().showMessage(error.toString());
+                getView().showMessage(e.toString());
             }
 
             @Override
-            public void onGsonResponse(GoodsDetailResult goodsDetailResult) {
+            public void onResponseInUi(Call call, String body) {
                 getView().hideProgress();
+                GoodsDetailResult goodsDetailResult = new Gson().
+                        fromJson(body, GoodsDetailResult.class);
                 if (goodsDetailResult.getCode() == 1) {
                     getView().deleteEnd();
                     getView().showMessage("删除成功");
                 }
             }
-        };
-
-        get_data_builder = new GsonRequest.Builder<>()
-                .setMethod(Request.Method.POST)
-                .setUrl(EasyShopApi.BASE_URL + EasyShopApi.DETAIL)
-                .setTag(this)
-                .setClazz(GoodsDetailResult.class)
-                .setCallback(callback);
-
-        delete_builder = new GsonRequest.Builder<>()
-                .setMethod(Request.Method.POST)
-                .setUrl(EasyShopApi.BASE_URL + EasyShopApi.DELETE)
-                .setTag(this)
-                .setClazz(GoodsDetailResult.class)
-                .setCallback(delete_callback);
+        });
     }
 
-    /*获取商品的详细数据*/
-    public void getData(Map<String, String> mapUuid) {
-        getView().showProgress();
-        EasyShopClient.getInstance().addToRequestQueue(get_data_builder.setParams(mapUuid).build());
-    }
-
-    /*删除商品*/
-    public void delete(Map<String, String> mapUuid) {
-        getView().showProgress();
-        EasyShopClient.getInstance().addToRequestQueue(delete_builder.setParams(mapUuid).build());
+    @Override
+    public void detachView(boolean retainInstance) {
+        super.detachView(retainInstance);
+        if (getDetailCall != null) getDetailCall.cancel();
+        if (deleteCall != null) deleteCall.cancel();
     }
 }

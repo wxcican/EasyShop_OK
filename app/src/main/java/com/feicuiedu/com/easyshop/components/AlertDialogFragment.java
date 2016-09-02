@@ -18,6 +18,7 @@ public class AlertDialogFragment extends DialogFragment {
     private static final String KEY_TITLE = "title";
     private static final String KEY_MESSAGE = "message";
 
+    @SuppressWarnings("unused")
     public static AlertDialogFragment newInstance(int title) {
         AlertDialogFragment fragment = new AlertDialogFragment();
         Bundle args = new Bundle();
@@ -26,10 +27,10 @@ public class AlertDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public static AlertDialogFragment newInstance(int title, String msg) {
+    public static AlertDialogFragment newInstance(String msg) {
         AlertDialogFragment fragment = new AlertDialogFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_TITLE, title);
+        args.putInt(KEY_TITLE, R.string.username_pwd_rule);
         args.putString(KEY_MESSAGE, msg);
         fragment.setArguments(args);
         return fragment;

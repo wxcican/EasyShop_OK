@@ -138,7 +138,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
 
     @Override
     public void showUserPasswordError(String msg) {
-        AlertDialogFragment fragment = AlertDialogFragment.newInstance(R.string.username_pwd_rule, msg);
+        AlertDialogFragment fragment = AlertDialogFragment.newInstance(msg);
         fragment.show(getSupportFragmentManager(), getString(R.string.username_pwd_rule));
     }
 
@@ -152,7 +152,6 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
         /*反注册EventBus*/
         EventBus.getDefault().unregister(this);
     }

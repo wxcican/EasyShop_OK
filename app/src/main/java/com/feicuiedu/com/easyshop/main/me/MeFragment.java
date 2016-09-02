@@ -8,15 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.components.AvatarLoadOptions;
 import com.feicuiedu.com.easyshop.main.me.goodsload.GoodsLoadActivity;
 import com.feicuiedu.com.easyshop.main.me.persongoods.PersonGoodsActivity;
 import com.feicuiedu.com.easyshop.main.me.personinfo.PersonInfoActivity;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
-import com.feicuiedu.com.easyshop.network.EasyShopClient;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,20 +61,17 @@ public class MeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        /*进入页面是回去头像*/
-        ImageLoader imageLoader = EasyShopClient.getInstance().getImageLoader();
-        ImageLoader.ImageListener imageListener = imageLoader.getImageListener(
-                iv_user_head, R.drawable.user_ico, R.drawable.user_ico
-        );
-        imageLoader.get(EasyShopApi.IMAGE_URL + CurrentUser.getUser().getHead_Image(), imageListener);
+        /*设置头像*/
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance()
+                .displayImage(EasyShopApi.IMAGE_URL + CurrentUser.getUser().getHead_Image(),
+                        iv_user_head, AvatarLoadOptions.build());
     }
+
 
     @OnClick({R.id.iv_user_head, R.id.tv_person_info, R.id.tv_person_goods, R.id.tv_goods_upload})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_user_head:
-                activityUtils.startActivity(PersonInfoActivity.class);
-                break;
             case R.id.tv_person_info:
                 activityUtils.startActivity(PersonInfoActivity.class);
                 break;

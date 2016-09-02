@@ -12,17 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.components.AvatarLoadOptions;
 import com.feicuiedu.com.easyshop.components.PicWindow;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.ItemShow;
 import com.feicuiedu.com.easyshop.model.User;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
-import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.hybridsquad.android.library.CropHandler;
 import org.hybridsquad.android.library.CropHelper;
@@ -201,10 +201,9 @@ public class PersonInfoActivity extends MvpActivity<PersonInfoView, PersonInfoPr
 
     @Override
     public void updateAvatar(String url) {
-        ImageLoader imageLoader = EasyShopClient.getInstance().getImageLoader();
-        ImageLoader.ImageListener listener = imageLoader.getImageListener(
-                iv_user_head, R.drawable.user_ico, R.drawable.user_ico);
-        imageLoader.get(EasyShopApi.IMAGE_URL + url, listener);
+        /*设置头像*/
+        ImageLoader.getInstance()
+                .displayImage(EasyShopApi.IMAGE_URL + url, iv_user_head, AvatarLoadOptions.build());
     }
 
     @Override

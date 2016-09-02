@@ -16,11 +16,9 @@ import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.main.details.GoodsDetailActivity;
 import com.feicuiedu.com.easyshop.main.shop.GoodsAdapter;
 import com.feicuiedu.com.easyshop.main.shop.ShopView;
-import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.GoodsInfo;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,7 +32,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * 我的商品页
  */
 public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresenter>
-        implements ShopView<List<GoodsInfo>> {
+        implements ShopView{
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -50,10 +48,7 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
 
     @BindString(R.string.load_more_end)
     String load_more_end;
-    /**
-     * 获取商品时,分页下标
-     */
-    private int pageInt = 1;
+
     /**
      * 获取商品时,商品的类型,获取全部商品时为空
      */
@@ -61,7 +56,6 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
 
     private ActivityUtils activityUtils;
     private GoodsAdapter goodsAdapter;
-    private HashMap<String, String> shopMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +74,13 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*设置ToolBar的监听事件*/
         toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
-
-        initData();
         initView();
         recyclerView.setAdapter(goodsAdapter);
 
         goodsAdapter.setListener(new GoodsAdapter.OnItemClickedListener() {
             @Override
             public void onPhotoClicked(GoodsInfo goodsInfo) {
-                Intent intent = new Intent(PersonGoodsActivity.this, GoodsDetailActivity.class);
-                intent.putExtra("uuid", goodsInfo.getUuid());
-                intent.putExtra("state", 1);
+                Intent intent = GoodsDetailActivity.getStartIntent(PersonGoodsActivity.this, goodsInfo.getUuid(), 1);
                 startActivity(intent);
             }
         });
@@ -110,34 +100,16 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         ptrFrameLayout.setPtrHandler(new PtrDefaultHandler2() {
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
-                onLoaNextPage();
-                presenter.loadData(shopMap);
+                presenter.loadData(pageType);
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                initData();
-                presenter.refreshData(shopMap);
+                presenter.refreshData(pageType);
             }
         });
     }
 
-    /*刚进入页面时请求数据的初始化*/
-    private void initData() {
-        shopMap = new HashMap<>();
-        pageInt = 1;
-        shopMap.put("pageNo", pageInt + "");
-        shopMap.put("master", pageType);
-        shopMap.put("master", CurrentUser.getUser().getName());
-    }
-
-    /*上拉加载时请求数据中Page下标的累加*/
-    private void onLoaNextPage() {
-        pageInt++;
-        shopMap.put("pageNo", pageInt + "");
-        shopMap.put("type", pageType);
-        shopMap.put("master", CurrentUser.getUser().getName());
-    }
 
     /**
      * ToolBar菜单对应的单击事件
@@ -147,32 +119,25 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_household:
-                    shopMap.put("type", "household");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("household");
                     break;
                 case R.id.menu_electron:
-                    shopMap.put("type", "electron");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("electron");
                     break;
                 case R.id.menu_dress:
-                    shopMap.put("type", "dress");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("dress");
                     break;
                 case R.id.menu_book:
-                    shopMap.put("type", "book");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("book");
                     break;
                 case R.id.menu_toy:
-                    shopMap.put("type", "toy");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("toy");
                     break;
                 case R.id.menu_gift:
-                    shopMap.put("type", "gift");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("gift");
                     break;
                 case R.id.menu_other:
-                    shopMap.put("type", "other");
-                    presenter.refreshData(shopMap);
+                    presenter.refreshData("other");
                     break;
             }
             return false;
@@ -214,8 +179,6 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
 
     @Override
     public void showRefresh() {
-        /*数据刷新时,重置pageInt*/
-        pageInt = 1;
         tv_load_error.setVisibility(View.INVISIBLE);
         tv_load_empty.setVisibility(View.INVISIBLE);
     }

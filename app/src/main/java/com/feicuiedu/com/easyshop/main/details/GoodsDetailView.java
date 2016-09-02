@@ -18,6 +18,9 @@ public interface GoodsDetailView extends MvpView {
     /*设置商品信息*/
     void setData(GoodsDetail data);
 
+    /*商品不存在了*/
+    void showError();
+
     void showMessage(String msg);
 
     /*删除商品*/

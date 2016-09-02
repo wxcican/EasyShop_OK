@@ -1,124 +1,89 @@
 package com.feicuiedu.com.easyshop.main.me.persongoods;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.feicuiedu.com.easyshop.main.shop.ShopView;
+import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.GoodsResult;
-import com.feicuiedu.com.easyshop.network.EasyShopApi;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
+import com.feicuiedu.com.easyshop.network.UICallback;
 import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+
+import okhttp3.Call;
 
 
 public class PersonGoodsPresenter extends MvpNullObjectBasePresenter<ShopView> {
 
-    private HashMap<String, String> postMap;
-
     /**
-     * 下拉刷新
-     * @param postMap 请求表单对应的Map
+     * 获取商品时,分页下标
      */
-    public void refreshData(HashMap<String, String> postMap) {
-        this.postMap = postMap;
+    private int pageInt = 1;
+
+    private Call call;
+
+    public void refreshData(String type) {
         getView().showRefresh();
-        EasyShopClient.getInstance().addToRequestQueue(refreshRequest);
+        call = EasyShopClient.getInstance().getPersonData(1, type, CurrentUser.getUser().getName());
+        call.enqueue(new UICallback() {
+            @Override
+            public void onFailureInUi(Call call, IOException e) {
+                getView().showRefreshError(e.getMessage());
+            }
+
+            @Override
+            public void onResponseInUi(Call call, String body) {
+                GoodsResult goodsResult = new Gson().fromJson(body, GoodsResult.class);
+                switch (goodsResult.getCode()) {
+                    case 1:
+                        if (goodsResult.getData().size() == 0) {
+                            getView().showRefreshEnd();
+                        } else {
+                            getView().addRefreshData(goodsResult.getData());
+                            getView().hideRefresh();
+                        }
+                        pageInt = 2;
+                        break;
+                    default:
+                        getView().showRefreshError(goodsResult.getMessage());
+                }
+            }
+        });
     }
 
-    /**
-     * 上拉加载
-     * @param postMap 请求表单对应的Map
-     */
-    public void loadData(HashMap<String, String> postMap) {
-        this.postMap = postMap;
+    public void loadData(String type) {
         getView().showLoadMoreLoading();
-        EasyShopClient.getInstance().addToRequestQueue(loadRequest);
+        if (pageInt == 0) pageInt = 1;
+        call = EasyShopClient.getInstance().getPersonData(pageInt, type, CurrentUser.getUser().getName());
+        call.enqueue(new UICallback() {
+            @Override
+            public void onFailureInUi(Call call, IOException e) {
+                getView().showLoadMoreError(e.getMessage());
+            }
+
+            @Override
+            public void onResponseInUi(Call call, String body) {
+                GoodsResult goodsResult = new Gson().fromJson(body, GoodsResult.class);
+                switch (goodsResult.getCode()) {
+                    case 1:
+                        if (goodsResult.getData().size() == 0) {
+                            getView().showLoadMoreEnd();
+                        } else {
+                            getView().addMoreData(goodsResult.getData());
+                            getView().hideLoadMore();
+                        }
+                        pageInt++;
+                        break;
+                    default:
+                        getView().showLoadMoreError(goodsResult.getMessage());
+                }
+            }
+        });
     }
 
-    public StringRequest refreshRequest = new StringRequest(
-            Request.Method.POST,
-            EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS,
-            new Response.Listener<String>() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onResponse(String response) {
-                    GoodsResult goodsResult = new Gson().fromJson(response, GoodsResult.class);
-                    switch (goodsResult.getCode()) {
-                        case 1:
-                            if (goodsResult.getData().size() == 0) {
-                                getView().showRefreshEnd();
-                            } else {
-                                getView().addRefreshData(goodsResult.getData());
-                                getView().hideRefresh();
-                            }
-                            break;
-                        default:
-                            getView().showRefreshError("未知错误");
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    getView().showRefreshError(error.getMessage());
-                }
-            }
-    ) {
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return postMap;
-        }
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Charset", "UTF-8");
-            return headers;
-        }
-    };
-
-    public StringRequest loadRequest = new StringRequest(
-            Request.Method.POST,
-            EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS,
-            new Response.Listener<String>() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onResponse(String response) {
-                    GoodsResult goodsResult = new Gson().fromJson(response, GoodsResult.class);
-                    switch (goodsResult.getCode()) {
-                        case 1:
-                            if (goodsResult.getData().size() == 0) {
-                                getView().showLoadMoreEnd();
-                            } else {
-                                getView().addMoreData(goodsResult.getData());
-                                getView().hideLoadMore();
-                            }
-                            break;
-                        default:
-                            getView().showLoadMoreError("未知错误");
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    getView().showLoadMoreError(error.getMessage());
-                }
-            }
-    ) {
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return postMap;
-        }
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Charset", "UTF-8");
-            return headers;
-        }
-    };
+    @Override
+    public void detachView(boolean retainInstance) {
+        super.detachView(retainInstance);
+        if (call != null) call.cancel();
+    }
 }

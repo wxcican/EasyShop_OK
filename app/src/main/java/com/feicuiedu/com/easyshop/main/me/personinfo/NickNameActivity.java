@@ -12,7 +12,8 @@ import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.LoginResult;
 import com.feicuiedu.com.easyshop.model.User;
-import com.feicuiedu.com.easyshop.network.EasyClient;
+import com.feicuiedu.com.easyshop.network.EasyShopClient;
+import com.feicuiedu.com.easyshop.network.UICallback;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -20,10 +21,6 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * 个人信息昵称修改的页面
@@ -75,35 +72,29 @@ public class NickNameActivity extends AppCompatActivity {
     private void init() {
         final User user = CurrentUser.getUser();
         user.setNick_Name(str_nickname);
-        String str = new Gson().toJson(user);
-        Call<ResponseBody> call = EasyClient.getInstance().update(str, null);
-        call.enqueue(new Callback<ResponseBody>() {
+        okhttp3.Call call = EasyShopClient.getInstance().uploadUser(user);
+        call.enqueue(new UICallback() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String str_body = response.body().string();
-                    LoginResult loginResult = new Gson().fromJson(str_body, LoginResult.class);
-                    if (loginResult == null) {
-                        activityUtils.showToast("未知错误");
-                        return;
-                    } else if (loginResult.getCode() != 1) {
-                        activityUtils.showToast(loginResult.getMessage());
-                        return;
-                    }
-                    CurrentUser.setUser(loginResult.getData());
-                    activityUtils.showToast("修改成功");
-                    onBackPressed();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void onFailureInUi(okhttp3.Call call, IOException e) {
+                activityUtils.showToast(e.getMessage());
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                activityUtils.showToast(t.getMessage());
+            public void onResponseInUi(okhttp3.Call call, String body) {
+                LoginResult loginResult = new Gson().fromJson(body, LoginResult.class);
+                if (loginResult == null) {
+                    activityUtils.showToast("未知错误");
+                    return;
+                } else if (loginResult.getCode() != 1) {
+                    activityUtils.showToast(loginResult.getMessage());
+                    return;
+                }
+                CurrentUser.setUser(loginResult.getData());
+                activityUtils.showToast("修改成功");
+                onBackPressed();
+
             }
         });
-
     }
 
 }

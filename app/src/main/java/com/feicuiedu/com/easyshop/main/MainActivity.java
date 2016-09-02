@@ -1,17 +1,19 @@
 package com.feicuiedu.com.easyshop.main;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.main.maillist.MailListFragment;
+import com.feicuiedu.com.easyshop.main.me.MeFragment;
+import com.feicuiedu.com.easyshop.main.message.MessageFragment;
+import com.feicuiedu.com.easyshop.main.shop.ShopFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,24 +24,18 @@ import butterknife.OnClick;
  */
 public class MainActivity extends AppCompatActivity {
 
+    @Bind({R.id.tv_shop, R.id.tv_message, R.id.tv_mail_list, R.id.tv_me})
+    TextView[] textViews;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.tv_shop)
-    TextView tv_shop;
-    @Bind(R.id.tv_message)
-    TextView tv_message;
-    @Bind(R.id.tv_mail_list)
-    TextView tv_mail_list;
-    @Bind(R.id.tv_me)
-    TextView tv_me;
     @Bind(R.id.tv_title)
     TextView tv_title;
     @Bind(R.id.viewpager)
     ViewPager viewPager;
-    private int pageInt = 0;
 
     /*点击2次退出程序*/
-    private static boolean isExit = false;
+    private boolean isExit = false;
     private ActivityUtils activityUtils;
 
     @Override
@@ -61,74 +57,80 @@ public class MainActivity extends AppCompatActivity {
 
     /*进入页面数据初始化,默认显示为商城页面*/
     private void init() {
-        textChange(pageInt);
-        viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), pageInt));
-        viewPager.setCurrentItem(pageInt);
+        textViews[0].setSelected(true);
+        viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setCurrentItem(0);
+        /*ViewPager的滑动事件*/
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (TextView textView : textViews) {
+                    textView.setSelected(false);
+                }
+                tv_title.setText(textViews[position].getText());
+                textViews[position].setSelected(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     @OnClick({R.id.tv_shop, R.id.tv_message, R.id.tv_mail_list, R.id.tv_me})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_shop:
-                pageInt = 0;
-                textChange(pageInt);
-                viewPager.setCurrentItem(pageInt);
-                break;
-            case R.id.tv_message:
-                pageInt = 1;
-                textChange(1);
-                viewPager.setCurrentItem(pageInt);
-                break;
-            case R.id.tv_mail_list:
-                pageInt = 2;
-                textChange(pageInt);
-                viewPager.setCurrentItem(pageInt);
-                break;
-            case R.id.tv_me:
-                pageInt = 3;
-                textChange(pageInt);
-                viewPager.setCurrentItem(pageInt);
-                break;
+    public void onClick(TextView view) {
+        for (int i = 0; i < textViews.length; i++) {
+            textViews[i].setSelected(false);
+            textViews[i].setTag(i);
         }
+        view.setSelected(true);
+        viewPager.setCurrentItem((Integer) view.getTag());
+        tv_title.setText(textViews[(Integer) view.getTag()].getText());
     }
 
-
-    /**
-     * TextView的选择效果
-     *
-     * @param showId 要显示的TextView的ID(0~3之间)
-     */
-    @SuppressWarnings("deprecation")
-    private void textChange(int showId) {
-        TextView[] textViews = new TextView[]{tv_shop, tv_message, tv_mail_list, tv_me};
-        for (TextView textView : textViews) {
-            textView.setSelected(false);
-            textView.setTextColor(getResources().getColor(R.color.text_color_hint));
-        }
-        textViews[showId].setSelected(true);
-        viewPager.setCurrentItem(showId);
-        textViews[showId].setTextColor(getResources().getColor(R.color.colorPrimary));
-        tv_title.setText(textViews[showId].getText());
-    }
 
     @Override
     public void onBackPressed() {
         if (!isExit) {
             isExit = true;
             activityUtils.showToast("再按一次退出程序");
-            handler.sendEmptyMessageDelayed(0, 2000);
+            viewPager.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isExit = false;
+                }
+            }, 2000);
         } else {
             finish();
         }
     }
 
-    @SuppressLint("HandlerLeak")
-    private static Handler handler = new Handler() {
+    private FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            isExit = false;
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return ShopFragment.getInstance(0);
+                case 1:
+                    return new MessageFragment();
+                case 2:
+                    return new MailListFragment();
+                case 3:
+                    return MeFragment.getInstance(3);
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
         }
     };
 }

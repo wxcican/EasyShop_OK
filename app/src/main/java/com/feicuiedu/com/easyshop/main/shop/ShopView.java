@@ -1,8 +1,11 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
+import com.feicuiedu.com.easyshop.model.GoodsInfo;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-public interface ShopView<M> extends MvpView {
+import java.util.List;
+
+public interface ShopView extends MvpView {
 
     /**
      * 数据刷新 --刷新中
@@ -47,12 +50,12 @@ public interface ShopView<M> extends MvpView {
     /**
      * 添加更多数据
      */
-    void addMoreData(M data);
+    void addMoreData(List<GoodsInfo> data);
 
     /**
      * 添加刷新更多的数据
      */
-    void addRefreshData(M data);
+    void addRefreshData(List<GoodsInfo> data);
 
     /**
      * 消息提示

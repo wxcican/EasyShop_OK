@@ -64,6 +64,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/indicator" />
+
         </RelativeLayout>
 
     </ScrollView>
@@ -99,7 +100,21 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_23"
             tools:ignore="ButtonStyle" />
+
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_goods_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="@string/goods_delete_master"
+        android:textColor="@color/text_goods_name"
+        android:textSize="@dimen/sp_20"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.feicuiedu.com.easyshop.R;
+import com.feicuiedu.com.easyshop.components.AvatarLoadOptions;
 import com.feicuiedu.com.easyshop.model.GoodsInfo;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
-import com.feicuiedu.com.easyshop.network.EasyShopClient;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,6 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
     @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(GoodsView holder, final int position) {
-
         holder.tv_name.setText(list.get(position).getName());
         holder.tv_price.setText(list.get(position).getPrice());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -61,13 +60,9 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
                     listener.onPhotoClicked(list.get(position));
             }
         });
-        ImageLoader imageLoader = EasyShopClient.getInstance().
-                getImageLoader();
-        ImageLoader.ImageListener imageListener = imageLoader.getImageListener(
-                holder.imageView,
-                R.drawable.image_loding,
-                R.drawable.image_error);
-        imageLoader.get(EasyShopApi.IMAGE_URL + list.get(position).getPage(), imageListener);
+        ImageLoader.getInstance()
+                .displayImage(EasyShopApi.IMAGE_URL + list.get(position).getPage(),
+                        holder.imageView, AvatarLoadOptions.build_item());
     }
 
     @Override
@@ -75,6 +70,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
         return list.size();
     }
 
+    @SuppressWarnings("unused")
     public static class GoodsView extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_item_recycler)
         ImageView imageView;
