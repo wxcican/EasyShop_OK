@@ -1,6 +1,7 @@
 package com.feicuiedu.com.easyshop.main.shop;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
     private final List<GoodsInfo> list = new ArrayList<>();
     private OnItemClickedListener listener;
+    private Context context;
 
     public void setListener(OnItemClickedListener listener) {
         this.listener = listener;
@@ -44,6 +46,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
 
     @Override
     public GoodsView onCreateViewHolder(ViewGroup parent, int viewType) {
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler, parent, false);
         return new GoodsView(view);
     }
@@ -52,7 +55,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsView> {
     @Override
     public void onBindViewHolder(GoodsView holder, final int position) {
         holder.tv_name.setText(list.get(position).getName());
-        holder.tv_price.setText(list.get(position).getPrice());
+        holder.tv_price.setText(context.getString(R.string.goods_money, list.get(position).getPrice()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

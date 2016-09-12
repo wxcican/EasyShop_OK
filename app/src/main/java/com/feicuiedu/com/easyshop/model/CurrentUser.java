@@ -1,34 +1,47 @@
 package com.feicuiedu.com.easyshop.model;
 
+import com.feicuiedu.com.easyshop.network.EasyShopApi;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * 此类是一个用来缓存当前用户信息的极简单的实现。
+ * 将User转换为EaseUser
  */
 public class CurrentUser {
 
-    /*此类不可实例化*/
     private CurrentUser() {
     }
 
-    private static String userId;
+    private static List<String> list;
 
-    private static User user;
-
-    public static void setUserId(String userId) {
-        CurrentUser.userId = userId;
+    public static void setList(List<String> list) {
+        CurrentUser.list = list;
     }
 
-    public static void setUser(User user) {
-        CurrentUser.user = user;
+    public static List<String> getList() {
+        return list;
     }
 
-    // 清除缓存的信息
-    public static void clear() {
-        userId = null;
-        user = null;
+    public static List<EaseUser> convertAll(List<User> users) {
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        ArrayList<EaseUser> easeUsers = new ArrayList<>();
+        for (User user : users) {
+            easeUsers.add(convert(user));
+        }
+        return easeUsers;
     }
 
-    public static User getUser() {
-        return user;
+    public static EaseUser convert(User user) {
+        EaseUser easeUser = new EaseUser(user.getHx_Id());
+        easeUser.setNick(user.getNick_Name());
+        easeUser.setAvatar(EasyShopApi.IMAGE_URL + user.getHead_Image());
+        EaseCommonUtils.setUserInitialLetter(easeUser);
+        return easeUser;
     }
-
 }

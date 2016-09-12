@@ -13,9 +13,9 @@ package com.feicuiedu.com.easyshop.commons;
 @SuppressWarnings("unused")
 public final class LogUtils {
 
-    private static final String TAG = "yitao";
+    private static final String TAG = "easyshop";
 
-    private static final String TAG_TRACE = "yitao";
+    private static final String TAG_TRACE = "easyshop";
 
     private static final class StackTraceDebug extends RuntimeException {
         final static private long serialVersionUID = 27058374L;

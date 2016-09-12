@@ -10,6 +10,11 @@ import java.io.IOException;
 
 public class Bimp {
 
+	/**
+	 * 根据图片路径获取Bitmap
+	 * @param path 图片路径
+	 * @return Bitmap
+     */
 	public static Bitmap revisionImageSize(String path) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));

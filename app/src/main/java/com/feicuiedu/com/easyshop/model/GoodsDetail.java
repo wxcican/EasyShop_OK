@@ -22,6 +22,7 @@ public class GoodsDetail implements Serializable {
     /*商品图片uri*/
     private List<ImageUri> pages;
 
+
     public String getName() {
         return name;
     }
@@ -53,4 +54,5 @@ public class GoodsDetail implements Serializable {
             return uri;
         }
     }
+
 }

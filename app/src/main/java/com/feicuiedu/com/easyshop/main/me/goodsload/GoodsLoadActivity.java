@@ -25,11 +25,11 @@ import android.widget.TextView;
 
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
 import com.feicuiedu.com.easyshop.commons.ImageUtils;
 import com.feicuiedu.com.easyshop.commons.MyFileUtils;
 import com.feicuiedu.com.easyshop.components.PicWindow;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
-import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.GoodsLoad;
 import com.feicuiedu.com.easyshop.model.ImageItem;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
@@ -68,6 +68,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
     Button btn_goods_load;
 
     private final String[] goods_type = {"家用", "电子", "服饰", "玩具", "图书", "礼品", "其它"};
+    /*商品种类为自定义*/
     private final String[] goods_type_num = {"household", "electron", "dress", "toy", "book", "gift", "other"};
 
     private ActivityUtils activityUtils;
@@ -133,7 +134,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         et_goods_describe.addTextChangedListener(textWatcher);
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -201,19 +202,17 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
 
         @Override
         public void onCropCancel() {
-            activityUtils.showToast("onCropCancel");
         }
 
         @Override
         public void onCropFailed(String message) {
-            activityUtils.showToast("onCropCancel");
         }
 
         @Override
         public CropParams getCropParams() {
             CropParams cropParams = new CropParams();
-            cropParams.aspectX = 300;
-            cropParams.aspectY = 300;
+            cropParams.aspectX = 400;
+            cropParams.aspectY = 400;
             return cropParams;
         }
 
@@ -224,7 +223,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
     };
 
     /*图像选择弹窗内的监听事件*/
-    private PicWindow.Listener listener = new PicWindow.Listener() {
+    private final PicWindow.Listener listener = new PicWindow.Listener() {
         @Override
         public void toGallery() {
             /*从相册选择*/
@@ -322,7 +321,7 @@ public class GoodsLoadActivity extends MvpActivity<GoodsLoadView, GoodsLoadPrese
         goodsLoad.setPrice(str_goods_price);
         goodsLoad.setDescribe(str_goods_describe);
         goodsLoad.setType(str_goods_type);
-        goodsLoad.setMaster(CurrentUser.getUser().getName());
+        goodsLoad.setMaster(CachePreferences.getUser().getName());
         return goodsLoad;
     }
 

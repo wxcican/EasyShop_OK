@@ -1,7 +1,7 @@
 package com.feicuiedu.com.easyshop.main.me.persongoods;
 
+import com.feicuiedu.com.easyshop.model.CachePreferences;
 import com.feicuiedu.com.easyshop.main.shop.ShopView;
-import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.GoodsResult;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.feicuiedu.com.easyshop.network.UICallback;
@@ -24,7 +24,7 @@ public class PersonGoodsPresenter extends MvpNullObjectBasePresenter<ShopView> {
 
     public void refreshData(String type) {
         getView().showRefresh();
-        call = EasyShopClient.getInstance().getPersonData(1, type, CurrentUser.getUser().getName());
+        call = EasyShopClient.getInstance().getPersonData(1, type, CachePreferences.getUser().getName());
         call.enqueue(new UICallback() {
             @Override
             public void onFailureInUi(Call call, IOException e) {
@@ -54,7 +54,7 @@ public class PersonGoodsPresenter extends MvpNullObjectBasePresenter<ShopView> {
     public void loadData(String type) {
         getView().showLoadMoreLoading();
         if (pageInt == 0) pageInt = 1;
-        call = EasyShopClient.getInstance().getPersonData(pageInt, type, CurrentUser.getUser().getName());
+        call = EasyShopClient.getInstance().getPersonData(pageInt, type, CachePreferences.getUser().getName());
         call.enqueue(new UICallback() {
             @Override
             public void onFailureInUi(Call call, IOException e) {

@@ -32,7 +32,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * 我的商品页
  */
 public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresenter>
-        implements ShopView{
+        implements ShopView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -113,8 +113,9 @@ public class PersonGoodsActivity extends MvpActivity<ShopView, PersonGoodsPresen
 
     /**
      * ToolBar菜单对应的单击事件
+     * 注：这里商品的种类为自定义
      */
-    private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+    private final Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {

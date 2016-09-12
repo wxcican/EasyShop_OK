@@ -12,6 +12,7 @@ public class User implements Serializable {
 
     @SerializedName("username")
     private String name;
+    private String password;
     @SerializedName("name")
     private String hx_Id;
     @SerializedName("uuid")
@@ -23,6 +24,10 @@ public class User implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getHx_Id() {
@@ -45,4 +50,23 @@ public class User implements Serializable {
         this.nick_Name = nick_Name;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHx_Id(String hx_Id) {
+        this.hx_Id = hx_Id;
+    }
+
+    public void setTable_Id(String table_Id) {
+        this.table_Id = table_Id;
+    }
+
+    public void setHead_Image(String head_Image) {
+        this.head_Image = head_Image;
+    }
 }

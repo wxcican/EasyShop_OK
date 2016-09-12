@@ -2,9 +2,11 @@ package com.feicuiedu.com.easyshop.user.login;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,13 +16,8 @@ import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.components.AlertDialogFragment;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
-import com.feicuiedu.com.easyshop.main.MainActivity;
-import com.feicuiedu.com.easyshop.user.EventFinish;
 import com.feicuiedu.com.easyshop.user.register.RegisterActivity;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +31,8 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     EditText et_pwd;
     @Bind(R.id.btn_login)
     Button btn_login;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
 
     private ActivityUtils activityUtils;
@@ -48,8 +47,6 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
         ButterKnife.bind(this);
         activityUtils = new ActivityUtils(this);
         init();
-        /*注册EventBus*/
-        EventBus.getDefault().register(this);
     }
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -71,10 +68,14 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
             btn_login.setEnabled(canLogin);
         }
     };
-    
+
     private void init() {
         et_userName.addTextChangedListener(textWatcher);
         et_pwd.addTextChangedListener(textWatcher);
+        if (dialogFragment == null) dialogFragment = new ProgressDialogFragment();
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @SuppressWarnings("unused")
@@ -107,10 +108,15 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) finish();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void showProgress() {
         /*强制关闭软键盘*/
         activityUtils.hideSoftKeyboard();
-        if (dialogFragment == null) dialogFragment = new ProgressDialogFragment();
         if (dialogFragment.isVisible()) return;
         dialogFragment.show(getSupportFragmentManager(), "progress_dialog_fragment");
     }
@@ -131,8 +137,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     }
 
     @Override
-    public void navigateToMain() {
-        activityUtils.startActivity(MainActivity.class);
+    public void loginSussed() {
         finish();
     }
 
@@ -140,19 +145,5 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     public void showUserPasswordError(String msg) {
         AlertDialogFragment fragment = AlertDialogFragment.newInstance(msg);
         fragment.show(getSupportFragmentManager(), getString(R.string.username_pwd_rule));
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onEvent(EventFinish str) {
-        /*通过EventBus接受注册页面的消息关闭本页面*/
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        /*反注册EventBus*/
-        EventBus.getDefault().unregister(this);
     }
 }

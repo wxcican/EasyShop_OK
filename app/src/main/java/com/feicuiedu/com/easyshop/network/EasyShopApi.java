@@ -5,12 +5,16 @@ package com.feicuiedu.com.easyshop.network;
  */
 public interface EasyShopApi {
 
-    String BASE_URL = "http://192.168.1.37:8080/yitao/";
-    String IMAGE_URL = "http://192.168.1.37:8080";
+    String BASE_URL = "http://wx.feicuiedu.com:9094/yitao/";
+    /*图片的基路径*/
+    String IMAGE_URL = "http://wx.feicuiedu.com:9094/";
 
     String LOGIN = "UserWeb?method=login";
     String REGISTER = "UserWeb?method=register";
     String UPDATE = "UserWeb?method=update";
+    String GET_NAMES = "UserWeb?method=getNames";
+    String GET_USER = "UserWeb?method=getUsers";
+
 
     String ALL_GOODS = "GoodsServlet?method=getAll";
     String ADD = "GoodsServlet?method=add";

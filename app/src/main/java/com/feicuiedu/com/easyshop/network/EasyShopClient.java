@@ -1,12 +1,13 @@
 package com.feicuiedu.com.easyshop.network;
 
-import com.feicuiedu.com.easyshop.model.CurrentUser;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
 import com.feicuiedu.com.easyshop.model.GoodsLoad;
 import com.feicuiedu.com.easyshop.model.User;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -21,7 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class EasyShopClient {
 
     private OkHttpClient okHttpClient = null;
-    private Gson gson;
+    private final Gson gson;
 
     private EasyShopClient() {
 
@@ -90,7 +91,7 @@ public class EasyShopClient {
     public Call uploadAvatar(File file) {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("user", gson.toJson(CurrentUser.getUser()))
+                .addFormDataPart("user", gson.toJson(CachePreferences.getUser()))
                 .addFormDataPart("image", file.getName(),
                         RequestBody.create(MediaType.parse("image/png"), file))
                 .build();
@@ -129,7 +130,7 @@ public class EasyShopClient {
                 .add("pageNo", String.valueOf(pageNo))
                 .add("type", type)
                 .build();
-        okhttp3.Request request = new okhttp3.Request.Builder()
+        Request request = new Request.Builder()
                 .url(EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS)
                 .post(requestBody)
                 .build();
@@ -149,7 +150,7 @@ public class EasyShopClient {
                 .add("type", type)
                 .add("master", master)
                 .build();
-        okhttp3.Request request = new okhttp3.Request.Builder()
+        Request request = new Request.Builder()
                 .url(EasyShopApi.BASE_URL + EasyShopApi.ALL_GOODS)
                 .post(requestBody)
                 .build();
@@ -207,6 +208,43 @@ public class EasyShopClient {
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
                 .url(EasyShopApi.BASE_URL + EasyShopApi.ADD)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 查找好友
+     * 根据昵称获取用户信息
+     *
+     * @param nickname 用户昵称
+     */
+    public Call getSearchUser(String nickname) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("nickname", nickname)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.GET_USER)
+                .post(requestBody)
+                .build();
+        return okHttpClient.newCall(request);
+    }
+
+    /**
+     * 获取好友列表
+     * 根据环信ID数组获取用户信息
+     *
+     * @param ids 环信ID数组
+     */
+    public Call getUsers(List<String> ids) {
+        String names = ids.toString();
+        /*清楚List转换后的String中空格*/
+        names = names.replace(" ", "");
+        RequestBody requestBody = new FormBody.Builder()
+                .add("name", names)
+                .build();
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.GET_NAMES)
                 .post(requestBody)
                 .build();
         return okHttpClient.newCall(request);

@@ -3,17 +3,24 @@ package com.feicuiedu.com.easyshop.main;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.feicuiedu.apphx.presentation.contact.list.HxContactListFragment;
+import com.feicuiedu.apphx.presentation.conversation.HxConversationListFragment;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
-import com.feicuiedu.com.easyshop.main.maillist.MailListFragment;
 import com.feicuiedu.com.easyshop.main.me.MeFragment;
-import com.feicuiedu.com.easyshop.main.message.MessageFragment;
 import com.feicuiedu.com.easyshop.main.shop.ShopFragment;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
+import com.feicuiedu.com.easyshop.model.UserResult;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -55,16 +63,20 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    /*进入页面数据初始化,默认显示为商城页面*/
+    /*进入页面数据初始化,默认显示为是市场页面*/
     private void init() {
         textViews[0].setSelected(true);
-        viewPager.setAdapter(fragmentPagerAdapter);
-        viewPager.setCurrentItem(0);
+        if (CachePreferences.getUser().getName() == null) {
+            viewPager.setAdapter(fragmentUnLoginAdapter);
+            viewPager.setCurrentItem(0);
+        } else {
+            viewPager.setAdapter(fragmentLoginAdapter);
+            viewPager.setCurrentItem(0);
+        }
         /*ViewPager的滑动事件*/
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -78,9 +90,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UserResult result) {
+        if (CachePreferences.getUser().getName() != null) {
+            viewPager.setCurrentItem(0);
+            viewPager.setAdapter(fragmentLoginAdapter);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -91,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
             textViews[i].setTag(i);
         }
         view.setSelected(true);
-        viewPager.setCurrentItem((Integer) view.getTag());
+        // 参数false代表瞬间切换，而不是平滑过渡
+        viewPager.setCurrentItem((Integer) view.getTag(), false);
         tv_title.setText(textViews[(Integer) view.getTag()].getText());
     }
 
@@ -112,18 +132,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    private FragmentPagerAdapter fragmentLoginAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ShopFragment.getInstance(0);
+                    return new ShopFragment();
                 case 1:
-                    return new MessageFragment();
+                    return new HxConversationListFragment();
                 case 2:
-                    return new MailListFragment();
+                    return new HxContactListFragment();
                 case 3:
-                    return MeFragment.getInstance(3);
+                    return new MeFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
+
+    private FragmentStatePagerAdapter fragmentUnLoginAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new ShopFragment();
+                case 1:
+                    return new NoLoginFragment();
+                case 2:
+                    return new NoLoginFragment();
+                case 3:
+                    return new MeFragment();
             }
             return null;
         }

@@ -13,8 +13,7 @@
         android:layout_alignLeft="@+id/bg"
         android:layout_alignRight="@+id/bg"
         android:layout_alignTop="@+id/bg"
-        android:scaleType="centerCrop"
-        android:src="@drawable/user_ico" />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/bg"

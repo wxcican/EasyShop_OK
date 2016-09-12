@@ -33,16 +33,6 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 public class ShopFragment extends MvpFragment<ShopView, ShopPresenter>
         implements ShopView{
 
-    private static final String KEY_GENRE = "key_genre";
-
-    public static ShopFragment getInstance(int genre) {
-        ShopFragment shopFragment = new ShopFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_GENRE, genre);
-        shopFragment.setArguments(args);
-        return shopFragment;
-    }
-
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.tv_load_error)

@@ -12,7 +12,7 @@ import okhttp3.Response;
 
 public abstract class UICallback implements Callback{
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onFailure(final Call call, final IOException e) {
@@ -33,7 +33,6 @@ public abstract class UICallback implements Callback{
             }
 
             final String content = response.body().string();
-
             handler.post(new Runnable() {
                 @Override
                 public void run() {

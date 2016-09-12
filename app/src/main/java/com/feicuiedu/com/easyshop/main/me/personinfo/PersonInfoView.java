@@ -13,6 +13,5 @@ public interface PersonInfoView extends MvpView {
 
     void hideProgress();
 
-
     void showMessage(String msg);
 }

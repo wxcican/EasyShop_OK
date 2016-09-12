@@ -6,12 +6,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.feicuiedu.apphx.model.repository.DefaultLocalUsersRepo;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
 import com.feicuiedu.com.easyshop.model.CurrentUser;
-import com.feicuiedu.com.easyshop.model.LoginResult;
 import com.feicuiedu.com.easyshop.model.User;
+import com.feicuiedu.com.easyshop.model.UserResult;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.feicuiedu.com.easyshop.network.UICallback;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 /**
  * 个人信息昵称修改的页面
@@ -70,26 +73,30 @@ public class NickNameActivity extends AppCompatActivity {
 
     /*昵称修改的*/
     private void init() {
-        final User user = CurrentUser.getUser();
+        final User user = CachePreferences.getUser();
         user.setNick_Name(str_nickname);
-        okhttp3.Call call = EasyShopClient.getInstance().uploadUser(user);
+        Call call = EasyShopClient.getInstance().uploadUser(user);
         call.enqueue(new UICallback() {
             @Override
-            public void onFailureInUi(okhttp3.Call call, IOException e) {
+            public void onFailureInUi(Call call, IOException e) {
                 activityUtils.showToast(e.getMessage());
             }
 
             @Override
-            public void onResponseInUi(okhttp3.Call call, String body) {
-                LoginResult loginResult = new Gson().fromJson(body, LoginResult.class);
-                if (loginResult == null) {
+            public void onResponseInUi(Call call, String body) {
+                UserResult userResult = new Gson().fromJson(body, UserResult.class);
+
+                if (userResult == null) {
                     activityUtils.showToast("未知错误");
                     return;
-                } else if (loginResult.getCode() != 1) {
-                    activityUtils.showToast(loginResult.getMessage());
+                } else if (userResult.getCode() != 1) {
+                    activityUtils.showToast(userResult.getMessage());
                     return;
                 }
-                CurrentUser.setUser(loginResult.getData());
+
+                DefaultLocalUsersRepo.getInstance(NickNameActivity.this)
+                        .save(CurrentUser.convert(userResult.getData()));
+                CachePreferences.setUser(userResult.getData());
                 activityUtils.showToast("修改成功");
                 onBackPressed();
 

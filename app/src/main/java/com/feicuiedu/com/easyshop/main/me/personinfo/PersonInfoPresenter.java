@@ -1,8 +1,11 @@
 package com.feicuiedu.com.easyshop.main.me.personinfo;
 
-import com.feicuiedu.com.easyshop.commons.LogUtils;
-import com.feicuiedu.com.easyshop.model.CurrentUser;
-import com.feicuiedu.com.easyshop.model.LoginResult;
+import com.feicuiedu.apphx.model.HxMessageManager;
+import com.feicuiedu.apphx.model.HxUserManager;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
+import com.feicuiedu.com.easyshop.model.UserResult;
+import com.feicuiedu.com.easyshop.model.User;
+import com.feicuiedu.com.easyshop.network.EasyShopApi;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.feicuiedu.com.easyshop.network.UICallback;
 import com.google.gson.Gson;
@@ -29,19 +32,24 @@ public class PersonInfoPresenter extends MvpNullObjectBasePresenter<PersonInfoVi
             }
 
             @Override
-            public void onResponseInUi(Call call,String body) {
+            public void onResponseInUi(Call call, String body) {
                 getView().hideProgress();
-                LoginResult loginResult = new Gson().fromJson(body, LoginResult.class);
-                if (loginResult == null) {
+                UserResult userResult = new Gson().fromJson(body, UserResult.class);
+                if (userResult == null) {
                     getView().showMessage("未知错误");
                     return;
-                } else if (loginResult.getCode() != 1) {
-                    getView().showMessage(loginResult.getMessage());
+                } else if (userResult.getCode() != 1) {
+                    getView().showMessage(userResult.getMessage());
                     return;
                 }
-                CurrentUser.setUser(loginResult.getData());
-                LogUtils.i("===头像地址===" + loginResult.getData().getHead_Image());
-                getView().updateAvatar(loginResult.getData().getHead_Image());
+                User user = userResult.getData();
+                CachePreferences.setUser(user);
+                getView().updateAvatar(userResult.getData().getHead_Image());
+                /*环信更新用户头像*/
+                HxUserManager.getInstance()
+                        .updateAvatar(EasyShopApi.IMAGE_URL + userResult.getData().getHead_Image());
+                HxMessageManager.getInstance()
+                        .sendAvatarUpdateMessage(EasyShopApi.IMAGE_URL + userResult.getData().getHead_Image());
             }
         });
     }

@@ -29,7 +29,7 @@ public class GoodsLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public int mode;
     private ArrayList<ImageItem> list = new ArrayList<>();
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
     private OnItemClickedListener mListener;
 
     public GoodsLoadAdapter(Context context, ArrayList<ImageItem> list) {

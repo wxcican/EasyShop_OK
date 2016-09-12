@@ -3,9 +3,7 @@ package com.feicuiedu.com.easyshop.components;
 import com.feicuiedu.com.easyshop.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
-/**
- * 用户头像加载选项
- */
+
 public class AvatarLoadOptions {
 
     private AvatarLoadOptions() {
@@ -13,6 +11,9 @@ public class AvatarLoadOptions {
 
     private static DisplayImageOptions options;
 
+    /**
+     * 用户头像加载选项
+     */
     public static DisplayImageOptions build() {
         if (options == null) {
             options = new DisplayImageOptions.Builder()
@@ -29,6 +30,9 @@ public class AvatarLoadOptions {
 
     private static DisplayImageOptions options_item;
 
+    /**
+     * 图片加载选项
+     */
     public static DisplayImageOptions build_item() {
         if (options_item == null) {
             options_item = new DisplayImageOptions.Builder()

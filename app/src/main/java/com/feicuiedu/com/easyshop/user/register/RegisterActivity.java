@@ -15,11 +15,7 @@ import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.commons.RegexUtils;
 import com.feicuiedu.com.easyshop.components.AlertDialogFragment;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
-import com.feicuiedu.com.easyshop.main.MainActivity;
-import com.feicuiedu.com.easyshop.user.EventFinish;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -142,11 +138,8 @@ public class RegisterActivity extends MvpActivity<RegisterView, RegisterPresente
     }
 
     @Override
-    public void navigateToMain() {
-        activityUtils.startActivity(MainActivity.class);
+    public void registerSuccess() {
         finish();
-        /*通过EventBus发消息通知登录页面关闭*/
-        EventBus.getDefault().post(new EventFinish());
     }
 
     @Override

@@ -13,6 +13,8 @@ public class GoodsDetailResult {
     @SerializedName("msg")
     private String message;
     private GoodsDetail datas;
+    /*发布者的信息*/
+    private User user;
 
     public int getCode() {
         return code;
@@ -25,4 +27,10 @@ public class GoodsDetailResult {
     public GoodsDetail getDatas() {
         return datas;
     }
+
+    public User getUser() {
+        return user;
+    }
+
 }
+

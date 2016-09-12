@@ -11,8 +11,8 @@ public interface LoginView extends MvpView {
     /*登录失败*/
     void loginFailed();
 
-    /*导航到主页面*/
-    void navigateToMain();
+    /*登录成功*/
+    void loginSussed();
 
     void showMessage(String msg);
 

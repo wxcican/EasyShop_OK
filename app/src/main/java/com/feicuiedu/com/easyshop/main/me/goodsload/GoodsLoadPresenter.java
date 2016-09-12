@@ -4,7 +4,7 @@ import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.commons.MyFileUtils;
 import com.feicuiedu.com.easyshop.model.GoodsLoad;
 import com.feicuiedu.com.easyshop.model.ImageItem;
-import com.feicuiedu.com.easyshop.model.Result;
+import com.feicuiedu.com.easyshop.model.GoodsLoadResult;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
 import com.feicuiedu.com.easyshop.network.UICallback;
 import com.google.gson.Gson;
@@ -37,7 +37,7 @@ public class GoodsLoadPresenter extends MvpNullObjectBasePresenter<GoodsLoadView
             public void onResponseInUi(okhttp3.Call call, String body) {
                 getView().hideProgress();
                 LogUtils.i("上传结果：" + body);
-                Result result = new Gson().fromJson(body, Result.class);
+                GoodsLoadResult result = new Gson().fromJson(body, GoodsLoadResult.class);
                 getView().showMessage(result.getMessage());
                 if (result.getCode() == 1)
                     getView().upLoadSuccess();

@@ -11,8 +11,8 @@ public interface RegisterView extends MvpView {
     /*注册失败*/
     void registerFailed();
 
-    /*导航到主页面*/
-    void navigateToMain();
+    /*注册成功*/
+    void registerSuccess();
 
     void showMessage(String msg);
 

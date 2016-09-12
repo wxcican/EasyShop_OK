@@ -3,7 +3,6 @@ package com.feicuiedu.com.easyshop.main.details;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -15,12 +14,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.feicuiedu.apphx.model.repository.DefaultLocalUsersRepo;
+import com.feicuiedu.apphx.presentation.call.voice.HxVoiceCallActivity;
+import com.feicuiedu.apphx.presentation.chat.HxChatActivity;
 import com.feicuiedu.com.easyshop.R;
 import com.feicuiedu.com.easyshop.commons.ActivityUtils;
 import com.feicuiedu.com.easyshop.components.AvatarLoadOptions;
 import com.feicuiedu.com.easyshop.components.ProgressDialogFragment;
+import com.feicuiedu.com.easyshop.model.CachePreferences;
+import com.feicuiedu.com.easyshop.model.CurrentUser;
 import com.feicuiedu.com.easyshop.model.GoodsDetail;
+import com.feicuiedu.com.easyshop.model.User;
 import com.feicuiedu.com.easyshop.network.EasyShopApi;
+import com.feicuiedu.com.easyshop.user.login.LoginActivity;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -55,6 +61,8 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     TextView tv_detail_name;
     @Bind(R.id.tv_detail_price)
     TextView tv_detail_price;
+    @Bind(R.id.tv_detail_master)
+    TextView tv_detail_master;
     @Bind(R.id.tv_detail_describe)
     TextView tv_detail_describe;
     @Bind(R.id.tv_goods_delete)
@@ -73,6 +81,7 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     private GoodsDetailAdapter adapter;
     private ProgressDialogFragment dialogFragment;
     private ActivityUtils activityUtils;
+    private User goods_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,18 +151,26 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
 
     @OnClick({R.id.btn_detail_call, R.id.btn_detail_message, R.id.tv_goods_delete})
     public void onClick(View view) {
+        if (CachePreferences.getUser().getName() == null) {
+            activityUtils.startActivity(LoginActivity.class);
+            return;
+        }
         switch (view.getId()) {
             case R.id.btn_detail_call:
-                /*需要袁崇杰hx的电话号*/
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:10086"));
-                try {
-                    startActivity(intent);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
+                if (goods_user.getHx_Id().equals(CachePreferences.getUser().getHx_Id())) {
+                    activityUtils.showToast("这个商品是自己发布的哦！");
+                    return;
                 }
+                Intent intent = HxVoiceCallActivity.getStartIntent(this, goods_user.getHx_Id(), false);
+                startActivity(intent);
                 break;
             case R.id.btn_detail_message:
-                activityUtils.showToast("发消息联系");
+                if (goods_user.getHx_Id().equals(CachePreferences.getUser().getHx_Id())) {
+                    activityUtils.showToast("这个商品是自己发布的哦！");
+                    return;
+                }
+                DefaultLocalUsersRepo.getInstance(this).save(CurrentUser.convert(goods_user));
+                startActivity(HxChatActivity.getStartIntent(GoodsDetailActivity.this, goods_user.getHx_Id()));
                 break;
             case R.id.tv_goods_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -194,9 +211,11 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView, GoodsDetai
     }
 
     @Override
-    public void setData(GoodsDetail data) {
+    public void setData(GoodsDetail data, User goods_user) {
+        this.goods_user = goods_user;
         tv_detail_name.setText(data.getName());
         tv_detail_price.setText(getString(R.string.goods_money, data.getPrice()));
+        tv_detail_master.setText(getString(R.string.goods_detail_master, goods_user.getNick_Name()));
         tv_detail_describe.setText(data.getDescription());
     }
 

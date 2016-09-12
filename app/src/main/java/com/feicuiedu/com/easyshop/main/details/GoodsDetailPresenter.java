@@ -1,5 +1,6 @@
 package com.feicuiedu.com.easyshop.main.details;
 
+import com.feicuiedu.com.easyshop.commons.LogUtils;
 import com.feicuiedu.com.easyshop.model.GoodsDetail;
 import com.feicuiedu.com.easyshop.model.GoodsDetailResult;
 import com.feicuiedu.com.easyshop.network.EasyShopClient;
@@ -31,6 +32,7 @@ public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetail
             @Override
             public void onResponseInUi(Call call, String body) {
                 getView().hideProgress();
+                LogUtils.i("====商品详情====" + body);
                 GoodsDetailResult goodsDetailResult = new Gson().
                         fromJson(body, GoodsDetailResult.class);
                 if (goodsDetailResult.getCode() == 1) {
@@ -40,7 +42,7 @@ public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetail
                         list.add(goodsDetail.getPages().get(i).getUri());
                     }
                     getView().setImageData(list);
-                    getView().setData(goodsDetail);
+                    getView().setData(goodsDetail, goodsDetailResult.getUser());
                 } else {
                     getView().showError();
                 }
